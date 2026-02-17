@@ -3,68 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TESTNEST</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>TESTNEST Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: blue;
+            font-size: 2em;
+        }
+        .toggle-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .toggle-tabs button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .toggle-tabs button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-btn {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .login-btn:hover {
+            background-color: darkorange;
+        }
+        .hint {
+            font-size: 0.9em;
+            color: gray;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-
-<header>
-    <h1>Welcome to TESTNEST</h1>
-</header>
-
-<main>
-    <div id="login">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" required>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" required>
-
-            <button type="submit">Login</button>
-        </form>
+    <div class="login-container">
+        <h1>TESTNEST</h1>
+        <div class="toggle-tabs">
+            <button id="student-btn">Student</button>
+            <button id="admin-btn">Admin</button>
+        </div>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button class="login-btn">LOGIN AS STUDENT</button>
+        <div class="hint">Demo Credentials: Username: demo / Password: demo123</div>
     </div>
-
-    <div id="quiz" class="hidden">
-        <h2>Quiz</h2>
-        <p id="timer">Time Left: <span id="time">60</span> seconds</p>
-        <form id="quizForm">
-            <!-- Quiz questions will be injected here -->
-        </form>
-        <button id="submitQuiz">Submit Quiz</button>
-    </div>
-
-    <div id="adminPanel" class="hidden">
-        <h2>Admin Panel</h2>
-        <form id="addQuestionForm">
-            <label for="question">Question:</label>
-            <input type="text" id="question" required>
-
-            <label for="answer">Answer:</label>
-            <input type="text" id="answer" required>
-
-            <button type="submit">Add Question</button>
-        </form>
-    </div>
-
-    <div id="resultsTracking" class="hidden">
-        <h2>Your Results</h2>
-        <table id="resultsTable">
-            <thead>
-                <tr><th>Quiz Name</th><th>Score</th></tr>
-            </thead>
-            <tbody>
-                <!-- Results will be injected here -->
-            </tbody>
-        </table>
-    </div>
-</main>
-
-<footer>
-    <p>&copy; 2026 TESTNEST</p>
-</footer>
-
-<script src="script.js"></script>
+    <script>
+        // Add functionality for toggling between Student/Admin
+        document.getElementById('student-btn').onclick = function() {
+            // Add student login functionality
+        };
+        document.getElementById('admin-btn').onclick = function() {
+            // Add admin login functionality
+        };
+        // Add login functionality
+        document.querySelector('.login-btn').onclick = function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            // Handle login action here
+            // Go to quiz, worksheets, results tracking, or admin panel based on user role
+        };
+    </script>
 </body>
 </html>
