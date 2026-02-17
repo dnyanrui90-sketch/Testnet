@@ -3,20 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TESTNEST Application</title>
+    <title>TESTNEST App</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <header>
-        <h1>Welcome to TESTNEST</h1>
-    </header>
-    <main>
-        <section>
-            <p>This is the TESTNEST application code.</p>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 TESTNEST</p>
-    </footer>
+    <div id="loginForm" class="container">
+        <h2>Login</h2>
+        <form>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div id="studentDashboard" class="hidden">
+        <h2>Student Dashboard</h2>
+        <p>Welcome, <span id="studentName"></span>!</p>
+        <button id="takeQuiz">Take Quiz</button>
+    </div>
+
+    <div id="adminDashboard" class="hidden">
+        <h2>Admin Dashboard</h2>
+        <p>Admin functionalities go here.</p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').onsubmit = function(event) {
+            event.preventDefault(); // Prevent form submission
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate login
+            if (username === 'admin' && password === 'admin123') {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+            } else if (username && password) {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('studentName').innerText = username;
+                document.getElementById('studentDashboard').classList.remove('hidden');
+            } else {
+                alert('Please enter valid credentials');
+            }
+        };
+
+        document.getElementById('takeQuiz').onclick = function() {
+            alert('Quiz functionality not implemented yet.');
+        };
+    </script>
 </body>
 </html>
