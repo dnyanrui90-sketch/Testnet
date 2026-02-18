@@ -2,72 +2,22 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>My EdTech Platform</title>
+<title>EdTech Startup</title>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <style>
-body{
-  font-family: Arial;
-  margin:0;
-  background:#f4f6f9;
-}
-
-header{
-  background:#2c3e50;
-  color:white;
-  padding:15px;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-}
-
-.container{
-  padding:20px;
-  max-width:1000px;
-  margin:auto;
-}
-
-.card{
-  background:white;
-  padding:15px;
-  margin-bottom:15px;
-  border-radius:8px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
-
-input, select, textarea{
-  width:100%;
-  padding:8px;
-  margin:5px 0;
-}
-
-button{
-  padding:8px 12px;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-  margin-top:5px;
-}
-
-.btn-green{ background:#27ae60; color:white; }
-.btn-blue{ background:#3498db; color:white; }
-.btn-red{ background:#e74c3c; color:white; }
-
-.question-block{
-  background:#f9f9f9;
-  padding:10px;
-  margin-top:10px;
-  border-radius:5px;
-}
-
-.opt-row{
-  display:flex;
-  gap:10px;
-  margin-top:5px;
-}
-
-.opt-row input[type="text"]{
-  flex:1;
-}
+body{font-family:Arial;margin:0;background:#f4f6f9}
+header{background:#1e272e;color:white;padding:15px;text-align:center;font-size:22px}
+.container{max-width:900px;margin:auto;padding:20px}
+.card{background:white;padding:20px;margin-bottom:20px;border-radius:8px}
+input,select,textarea{width:100%;padding:8px;margin:5px 0}
+button{padding:10px;background:#27ae60;color:white;border:none;margin-top:8px;width:100%}
+.timer{color:red;font-weight:bold;font-size:18px}
+.lock{color:red;font-weight:bold}
 </style>
 </head>
 
@@ -77,179 +27,251 @@ button{
 
 <div class="container">
 
-<!-- ADMIN PANEL -->
+<!-- LOGIN -->
+<div class="card" id="loginBox">
+<h3>Login with Mobile OTP</h3>
+<input type="text" id="phone" placeholder="+91XXXXXXXXXX">
+<div id="recaptcha-container"></div>
+<button onclick="sendOTP()">Send OTP</button>
+
+<input type="text" id="otp" placeholder="Enter OTP">
+<button onclick="verifyOTP()">Verify OTP</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none">
+
+<!-- ADMIN -->
 <div class="card">
 <h3>Admin Panel</h3>
+<input type="password" id="adminPass" placeholder="Enter Admin Password">
+<button onclick="unlockAdmin()">Unlock</button>
 
-<select id="selCourse"></select>
+<div id="adminSection" style="display:none">
 
-<input type="text" id="newCourse" placeholder="Add New Course">
-<button class="btn-green" onclick="addCourse()">Add Course</button>
+<input type="text" id="courseName" placeholder="Course Name">
+<label><input type="checkbox" id="paidCourse"> Paid Course</label>
+<button onclick="addCourse()">Add Course</button>
 
-<input type="text" id="subject" placeholder="Subject Name">
-<input type="text" id="chapter" placeholder="Chapter Name">
+<input type="text" id="questionText" placeholder="Question">
+<input type="text" id="opt1" placeholder="Option 1">
+<input type="text" id="opt2" placeholder="Option 2">
+<input type="text" id="opt3" placeholder="Option 3">
+<input type="text" id="opt4" placeholder="Option 4">
+<input type="number" id="correct" placeholder="Correct Option (0-3)">
+<input type="number" id="timeLimit" placeholder="Test Time (minutes)">
+<button onclick="addQuestion()">Save Question</button>
 
-<h4>Add Questions</h4>
-<div id="questionContainer"></div>
-<button class="btn-blue" onclick="addQuestion()">+ Add Question</button>
-
-<h4>Add Worksheet (PDF Link)</h4>
-<input type="text" id="worksheetLink" placeholder="Paste PDF URL">
-
-<button class="btn-green" onclick="addContent()">Save Content</button>
-
-<button class="btn-red" onclick="clearAll()">Clear All Data</button>
+</div>
 </div>
 
-
-<!-- STUDENT VIEW -->
+<!-- COURSES -->
 <div class="card">
-<h3>Student View</h3>
-<div id="studentContent"></div>
+<h3>Available Courses</h3>
+<div id="courseList"></div>
 </div>
 
+<!-- TEST -->
+<div class="card" id="testBox" style="display:none">
+<h3 id="testTitle"></h3>
+<div class="timer" id="timer"></div>
+<div id="questionArea"></div>
+<button onclick="submitTest()">Submit Test</button>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="card">
+<h3>Leaderboard</h3>
+<div id="leaderboard"></div>
+</div>
+
+</div>
 </div>
 
 <script>
 
-var content = JSON.parse(localStorage.getItem('edtechData')) || {};
+/* ==========================
+   🔥 REPLACE WITH YOUR FIREBASE CONFIG
+========================== */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
+};
 
-function saveData(){
-  localStorage.setItem('edtechData', JSON.stringify(content));
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* ==========================
+   OTP LOGIN
+========================== */
+
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+  'recaptcha-container',
+  { size: 'normal' }
+);
+
+function sendOTP(){
+  const phone = document.getElementById("phone").value;
+  auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
+  .then(result=>{
+    window.confirmationResult = result;
+    alert("OTP Sent");
+  }).catch(e=>alert(e.message));
 }
 
-function loadCourses(){
-  var select = document.getElementById('selCourse');
-  select.innerHTML = '<option value="">Select Course</option>';
-  Object.keys(content).forEach(c=>{
-    select.innerHTML += `<option value="${c}">${c}</option>`;
-  });
-  renderStudent();
+function verifyOTP(){
+  const code = document.getElementById("otp").value;
+  confirmationResult.confirm(code).then(result=>{
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("app").style.display="block";
+    loadCourses();
+    loadLeaderboard();
+  }).catch(()=>alert("Invalid OTP"));
+}
+
+/* ==========================
+   ADMIN
+========================== */
+
+function unlockAdmin(){
+  if(document.getElementById("adminPass").value==="admin123")
+    document.getElementById("adminSection").style.display="block";
 }
 
 function addCourse(){
-  var name = document.getElementById('newCourse').value.trim();
-  if(!name) return alert("Enter course name");
-  if(!content[name]) content[name] = {};
-  saveData();
-  document.getElementById('newCourse').value='';
+  const name=document.getElementById("courseName").value;
+  const paid=document.getElementById("paidCourse").checked;
+
+  db.collection("courses").doc(name).set({
+    paid:paid
+  });
+
+  alert("Course Added");
   loadCourses();
 }
 
 function addQuestion(){
-  var container = document.getElementById('questionContainer');
-  var index = container.children.length;
+  const name=document.getElementById("courseName").value;
 
-  container.innerHTML += `
-  <div class="question-block">
-    <textarea class="qText" placeholder="Enter Question"></textarea>
-    <div class="opt-row">
-      <input type="radio" name="ans${index}" value="0" checked>
-      <input type="text" class="optA" placeholder="Option A">
-    </div>
-    <div class="opt-row">
-      <input type="radio" name="ans${index}" value="1">
-      <input type="text" class="optB" placeholder="Option B">
-    </div>
-    <div class="opt-row">
-      <input type="radio" name="ans${index}" value="2">
-      <input type="text" class="optC" placeholder="Option C">
-    </div>
-    <div class="opt-row">
-      <input type="radio" name="ans${index}" value="3">
-      <input type="text" class="optD" placeholder="Option D">
-    </div>
-  </div>
-  `;
-}
-
-function addContent(){
-  var course = document.getElementById('selCourse').value;
-  var subject = document.getElementById('subject').value.trim();
-  var chapter = document.getElementById('chapter').value.trim();
-  var worksheet = document.getElementById('worksheetLink').value.trim();
-
-  if(!course || !subject || !chapter)
-    return alert("Fill Course, Subject and Chapter");
-
-  if(!content[course][subject]) content[course][subject]={};
-  if(!content[course][subject][chapter])
-    content[course][subject][chapter]={questions:[], worksheets:[]};
-
-  var questionBlocks = document.querySelectorAll('.question-block');
-
-  questionBlocks.forEach(block=>{
-    var q = block.querySelector('.qText').value.trim();
-    var optA = block.querySelector('.optA').value.trim();
-    var optB = block.querySelector('.optB').value.trim();
-    var optC = block.querySelector('.optC').value.trim();
-    var optD = block.querySelector('.optD').value.trim();
-    var ans = block.querySelector('input[type="radio"]:checked').value;
-
-    if(q && optA && optB && optC && optD){
-      content[course][subject][chapter].questions.push({
-        q:q,
-        opts:[optA,optB,optC,optD],
-        ans:ans
-      });
-    }
+  db.collection("courses").doc(name)
+  .collection("questions")
+  .add({
+    question:document.getElementById("questionText").value,
+    options:[
+      opt1.value,opt2.value,opt3.value,opt4.value
+    ],
+    correct:parseInt(correct.value),
+    time:parseInt(timeLimit.value)
   });
 
-  if(worksheet){
-    content[course][subject][chapter].worksheets.push(worksheet);
-  }
-
-  saveData();
-  alert("Content Saved!");
-
-  document.getElementById('questionContainer').innerHTML='';
-  document.getElementById('worksheetLink').value='';
-  document.getElementById('subject').value='';
-  document.getElementById('chapter').value='';
-
-  renderStudent();
+  alert("Question Saved");
 }
 
-function renderStudent(){
-  var div = document.getElementById('studentContent');
-  div.innerHTML='';
+/* ==========================
+   LOAD COURSES
+========================== */
 
-  Object.keys(content).forEach(course=>{
-    div.innerHTML += `<h4>${course}</h4>`;
+function loadCourses(){
+  const div=document.getElementById("courseList");
+  div.innerHTML="";
 
-    Object.keys(content[course]).forEach(subject=>{
-      div.innerHTML += `<b>${subject}</b><br>`;
-
-      Object.keys(content[course][subject]).forEach(chapter=>{
-        div.innerHTML += `<i>${chapter}</i><br>`;
-
-        var data = content[course][subject][chapter];
-
-        data.questions.forEach((qObj,i)=>{
-          div.innerHTML += `<p>${i+1}. ${qObj.q}</p>`;
-        });
-
-        data.worksheets.forEach(link=>{
-          div.innerHTML += `<a href="${link}" target="_blank">Download Worksheet</a><br>`;
-        });
-
-        div.innerHTML += `<hr>`;
-      });
+  db.collection("courses").get().then(snapshot=>{
+    snapshot.forEach(doc=>{
+      if(doc.data().paid){
+        div.innerHTML+=`<p>${doc.id} <span class="lock">(Paid)</span></p>`;
+      }else{
+        div.innerHTML+=`<button onclick="startTest('${doc.id}')">${doc.id}</button>`;
+      }
     });
   });
 }
 
-function clearAll(){
-  if(confirm("Delete all data?")){
-    localStorage.removeItem('edtechData');
-    content={};
-    loadCourses();
-  }
+/* ==========================
+   TEST SYSTEM
+========================== */
+
+let currentQuestions=[];
+let timeLeft=0;
+let timer;
+
+function startTest(course){
+  document.getElementById("testBox").style.display="block";
+  document.getElementById("testTitle").innerText=course;
+
+  db.collection("courses").doc(course)
+  .collection("questions")
+  .get().then(snapshot=>{
+    currentQuestions=[];
+    snapshot.forEach(doc=>{
+      currentQuestions.push(doc.data());
+    });
+    renderTest();
+  });
 }
 
-window.onload = loadCourses;
+function renderTest(){
+  const div=document.getElementById("questionArea");
+  div.innerHTML="";
+  currentQuestions.forEach((q,i)=>{
+    div.innerHTML+=`<p>${i+1}. ${q.question}</p>
+    ${q.options.map((o,index)=>
+      `<input type="radio" name="q${i}" value="${index}">${o}<br>`
+    ).join("")}`;
+  });
+
+  timeLeft=currentQuestions[0].time*60;
+  timer=setInterval(()=>{
+    timeLeft--;
+    timerDisplay.innerText="Time Left: "+timeLeft+" sec";
+    if(timeLeft<=0){
+      clearInterval(timer);
+      submitTest();
+    }
+  },1000);
+}
+
+function submitTest(){
+  clearInterval(timer);
+  let score=0;
+  currentQuestions.forEach((q,i)=>{
+    const selected=document.querySelector(`input[name="q${i}"]:checked`);
+    if(selected && parseInt(selected.value)===q.correct) score++;
+  });
+
+  alert("Score: "+score+"/"+currentQuestions.length);
+
+  db.collection("leaderboard").add({
+    user:auth.currentUser.phoneNumber,
+    score:score
+  });
+
+  loadLeaderboard();
+  document.getElementById("testBox").style.display="none";
+}
+
+/* ==========================
+   LEADERBOARD
+========================== */
+
+function loadLeaderboard(){
+  const div=document.getElementById("leaderboard");
+  div.innerHTML="";
+
+  db.collection("leaderboard")
+  .orderBy("score","desc")
+  .limit(10)
+  .get().then(snapshot=>{
+    snapshot.forEach((doc,i)=>{
+      div.innerHTML+=`<p>${doc.data().user} - ${doc.data().score}</p>`;
+    });
+  });
+}
 
 </script>
-
 </body>
 </html>
