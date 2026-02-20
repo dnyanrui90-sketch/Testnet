@@ -14,7 +14,6 @@
     :root{
       --bg:#0b1020;
       --card: rgba(255,255,255,0.08);
-      --card2: rgba(255,255,255,0.10);
       --border: rgba(255,255,255,0.14);
       --text:#eaf0ff;
       --muted: rgba(234,240,255,0.70);
@@ -65,11 +64,9 @@
       overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
     }
     .wrap{max-width:1100px; margin:0 auto; padding:18px 16px 40px;}
-    .grid{
-      display:grid; grid-template-columns: 1.2fr 0.8fr;
-      gap:16px;
-    }
+    .grid{display:grid; grid-template-columns: 1.2fr 0.8fr; gap:16px;}
     @media(max-width:900px){ .grid{grid-template-columns:1fr} }
+
     .card{
       background: var(--card);
       border:1px solid var(--border);
@@ -77,7 +74,6 @@
       box-shadow: var(--shadow);
       padding:16px;
     }
-    .card h2,.card h3{margin:0 0 10px 0}
     .muted{color:var(--muted); font-size:13px; line-height:1.45}
     .btnrow{display:flex; gap:10px; flex-wrap:wrap}
     button{
@@ -87,36 +83,13 @@
       transition: transform .08s ease, filter .12s ease;
     }
     button:active{transform: scale(.98)}
-    .btn{
-      background: rgba(255,255,255,0.10);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,0.14);
-    }
-    .btn-brand{
-      background: linear-gradient(135deg, var(--brand), #ff915f);
-      color:#120a07;
-      border: none;
-    }
-    .btn-blue{
-      background: linear-gradient(135deg, var(--brand2), #6ea6ff);
-      color:#081022;
-      border:none;
-    }
-    .btn-dark{
-      background: rgba(0,0,0,0.25);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,0.14);
-    }
-    .btn-ok{
-      background: linear-gradient(135deg, var(--ok), #7bed9f);
-      color:#04140b;
-      border:none;
-    }
-    .btn-bad{
-      background: linear-gradient(135deg, var(--bad), #ff6b81);
-      color:#24060b;
-      border:none;
-    }
+    .btn{background: rgba(255,255,255,0.10); color:var(--text); border:1px solid rgba(255,255,255,0.14);}
+    .btn-brand{background: linear-gradient(135deg, var(--brand), #ff915f); color:#120a07;}
+    .btn-blue{background: linear-gradient(135deg, var(--brand2), #6ea6ff); color:#081022;}
+    .btn-dark{background: rgba(0,0,0,0.25); color:var(--text); border:1px solid rgba(255,255,255,0.14);}
+    .btn-ok{background: linear-gradient(135deg, var(--ok), #7bed9f); color:#04140b;}
+    .btn-bad{background: linear-gradient(135deg, var(--bad), #ff6b81); color:#24060b;}
+
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row > *{flex:1; min-width:220px}
     input, select, textarea{
@@ -170,9 +143,7 @@
       z-index:999;
       max-width: 92vw;
     }
-    .hero{
-      display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
-    }
+    .hero{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;}
     .hero h1{margin:0; font-size:28px}
     .hero .sub{color:var(--muted); max-width:60ch; line-height:1.5}
   </style>
@@ -205,14 +176,14 @@
         </div>
       </div>
       <div style="min-width:260px; width:320px; max-width:100%;">
-        <div class="card" style="box-shadow:none; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.10);">
+        <div class="card" style="box-shadow:none; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,0,0.0);">
           <h3 style="margin:0 0 8px 0;">Login</h3>
           <div class="muted">Choose Student or Admin login. Both use Google.</div>
           <div class="btnrow" style="margin-top:12px;">
             <button class="btn-brand" onclick="loginAs('student')">Student Login (Google)</button>
             <button class="btn-blue" onclick="loginAs('admin')">Admin Login (Google)</button>
           </div>
-          <div class="small" style="margin-top:10px;">No OTP • No captcha • GitHub Pages friendly</div>
+          <div class="small" style="margin-top:10px;">If popup is blocked, login will automatically switch to redirect.</div>
         </div>
       </div>
     </div>
@@ -222,7 +193,7 @@
   <div id="app" style="display:none;">
     <div class="grid">
 
-      <!-- LEFT: Courses + Test -->
+      <!-- LEFT -->
       <div class="card">
         <div class="row" style="align-items:center">
           <div>
@@ -255,7 +226,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: Profile + Admin + Leaderboard -->
+      <!-- RIGHT -->
       <div>
         <div class="card">
           <h3 style="margin:0 0 8px 0;">Profile</h3>
@@ -288,45 +259,24 @@
           <textarea id="questionText" placeholder="Type your question..."></textarea>
 
           <div class="row">
-            <div>
-              <label>Option A</label>
-              <input type="text" id="opt1" placeholder="Option A" />
-            </div>
-            <div>
-              <label>Option B</label>
-              <input type="text" id="opt2" placeholder="Option B" />
-            </div>
+            <div><label>Option A</label><input type="text" id="opt1" placeholder="Option A" /></div>
+            <div><label>Option B</label><input type="text" id="opt2" placeholder="Option B" /></div>
           </div>
           <div class="row">
-            <div>
-              <label>Option C</label>
-              <input type="text" id="opt3" placeholder="Option C" />
-            </div>
-            <div>
-              <label>Option D</label>
-              <input type="text" id="opt4" placeholder="Option D" />
-            </div>
+            <div><label>Option C</label><input type="text" id="opt3" placeholder="Option C" /></div>
+            <div><label>Option D</label><input type="text" id="opt4" placeholder="Option D" /></div>
           </div>
 
           <div class="row">
-            <div>
-              <label>Correct Option Index</label>
-              <input type="number" id="correct" placeholder="0=A, 1=B, 2=C, 3=D" />
-            </div>
-            <div>
-              <label>Test Time (minutes)</label>
-              <input type="number" id="timeLimit" placeholder="Example: 5" />
-            </div>
+            <div><label>Correct Option Index</label><input type="number" id="correct" placeholder="0=A, 1=B, 2=C, 3=D" /></div>
+            <div><label>Test Time (minutes)</label><input type="number" id="timeLimit" placeholder="Example: 5" /></div>
           </div>
 
           <div class="btnrow">
             <button class="btn-brand" onclick="addQuestion()">Save Question</button>
             <button class="btn" onclick="clearQuestionForm()">Add Next Question</button>
           </div>
-
-          <div class="small" style="margin-top:10px;">
-            Tip: Select course from dropdown and keep adding questions unlimited.
-          </div>
+          <div class="small" style="margin-top:10px;">Tip: Select course from dropdown and keep adding unlimited questions.</div>
         </div>
 
         <div class="card" style="margin-top:16px;">
@@ -345,9 +295,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ==========================
-   FIREBASE CONFIG (YOUR PROJECT)
-========================== */
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAPML8zK9qgRQbUyv7lMVOtt0c5Osjyw_A",
   authDomain: "testnest-education.firebaseapp.com",
@@ -362,47 +310,47 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* ==========================
-   ADMIN CONTROL (VERY IMPORTANT)
-   Put your admin Gmail(s) here.
-========================== */
+/* ADMIN EMAILS */
 const ADMIN_EMAILS = [
-  const ADMIN_EMAILS = [
   "dnyanrui90@gmail.com",
   "pawarjai999@gmail.com"
 ];
- // ✅ your email (change/add more)
-];
 
-let intendedRole = "student"; // chosen at login
+let intendedRole = "student";
 let currentRole = "student";
 
-/* ==========================
-   UI HELPERS
-========================== */
+/* UI */
 function toast(msg){
   const el = document.getElementById("toast");
   el.textContent = msg;
   el.style.display = "block";
   setTimeout(()=> el.style.display="none", 2500);
 }
+function setTopStatus(msg){ document.getElementById("topStatus").textContent = msg; }
 
-function setTopStatus(msg){
-  document.getElementById("topStatus").textContent = msg;
-}
-
-/* ==========================
-   LOGIN (SEPARATE STUDENT / ADMIN)
-========================== */
+/* LOGIN (popup + redirect fallback) */
 function loginAs(role){
-  intendedRole = role; // student or admin
+  intendedRole = role;
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider)
-    .then(()=> {
-      // role will be applied in onAuthStateChanged
-    })
-    .catch(e => alert(e.message));
+
+  auth.signInWithPopup(provider).catch((e)=>{
+    if (
+      e.code === "auth/popup-blocked" ||
+      e.code === "auth/popup-closed-by-user" ||
+      e.code === "auth/operation-not-supported-in-this-environment"
+    ) {
+      // fallback for mobile / blocked popup
+      auth.signInWithRedirect(provider);
+    } else {
+      alert(e.message);
+    }
+  });
 }
+
+// handle redirect result (important for iphone/mobile)
+auth.getRedirectResult().catch((e)=>{
+  if(e && e.message) alert(e.message);
+});
 
 function logout(){
   auth.signOut().then(()=>{
@@ -415,19 +363,16 @@ function logout(){
 auth.onAuthStateChanged((user)=>{
   if(!user) return;
 
-  // Decide role: if user email is in admin list AND user clicked Admin Login
   const email = (user.email || "").toLowerCase();
   const isAdminEmail = ADMIN_EMAILS.map(x=>x.toLowerCase()).includes(email);
   currentRole = (intendedRole === "admin" && isAdminEmail) ? "admin" : "student";
 
-  // UI show/hide
   document.getElementById("loginCard").style.display="none";
   document.getElementById("app").style.display="block";
 
   document.getElementById("userName").textContent = user.displayName || "Student";
   document.getElementById("userEmail").textContent = user.email || "";
   document.getElementById("userRole").textContent = "Role: " + currentRole.toUpperCase();
-
   setTopStatus((user.displayName || "User") + " • " + currentRole.toUpperCase());
 
   document.getElementById("adminCard").style.display = (currentRole === "admin") ? "block" : "none";
@@ -437,15 +382,11 @@ auth.onAuthStateChanged((user)=>{
   refreshCoursePick();
 });
 
-/* ==========================
-   ADMIN: COURSES + QUESTIONS
-========================== */
+/* ADMIN: COURSES */
 function addCourse(){
   if(currentRole !== "admin") return alert("Admin only");
-
   const name = document.getElementById("courseName").value.trim();
   const paid = document.getElementById("paidCourse").checked;
-
   if(!name) return alert("Enter course name");
 
   db.collection("courses").doc(name).set({
@@ -464,7 +405,6 @@ function addCourse(){
 function refreshCoursePick(){
   const sel = document.getElementById("coursePick");
   if(!sel) return;
-
   sel.innerHTML = `<option value="">Select course</option>`;
 
   db.collection("courses").get().then(snap=>{
@@ -477,6 +417,7 @@ function refreshCoursePick(){
   }).catch(()=>{});
 }
 
+/* ADMIN: QUESTIONS */
 function clearQuestionForm(){
   document.getElementById("questionText").value="";
   document.getElementById("opt1").value="";
@@ -488,7 +429,6 @@ function clearQuestionForm(){
 
 function addQuestion(){
   if(currentRole !== "admin") return alert("Admin only");
-
   const course = (document.getElementById("coursePick").value || "").trim();
   if(!course) return alert("Select course from dropdown first");
 
@@ -514,14 +454,12 @@ function addQuestion(){
   })
   .then(()=>{
     toast("Question saved!");
-    clearQuestionForm(); // ready for next
+    clearQuestionForm();
   })
   .catch(e=>alert(e.message));
 }
 
-/* ==========================
-   COURSES + PAID LOCK
-========================== */
+/* COURSES (PAID LOCK) */
 function loadCourses(){
   const div = document.getElementById("courseList");
   div.innerHTML = "Loading...";
@@ -531,7 +469,6 @@ function loadCourses(){
       div.innerHTML = `<div class="muted">No courses yet. Admin add course first.</div>`;
       return;
     }
-
     let html = "";
     snapshot.forEach(doc=>{
       const courseName = doc.id;
@@ -550,21 +487,18 @@ function loadCourses(){
         </div>
       </div>`;
     });
-
     div.innerHTML = html;
   }).catch(e=>{
     div.innerHTML = `<div class="muted">${escapeHtml(e.message)}</div>`;
   });
 }
 
-function escapeQuotes(s){ return s.replace(/'/g,"\\'"); }
+function escapeQuotes(s){ return (s||"").replace(/'/g,"\\'"); }
 function escapeHtml(s){
   return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
-/* ==========================
-   TEST (TIMER + RESULT)
-========================== */
+/* TEST */
 let currentCourse = "";
 let currentQuestions = [];
 let timeLeft = 0;
@@ -592,7 +526,6 @@ function startTest(course){
       document.getElementById("qCountInfo").textContent = currentQuestions.length + " questions";
       renderTest();
 
-      // time in minutes from first question (simple model)
       const mins = (currentQuestions[0].time || 5);
       startTimer(mins * 60);
     })
@@ -636,19 +569,13 @@ function startTimer(seconds){
     }
   }, 1000);
 }
-
-function stopTimer(){
-  if(timerInt) clearInterval(timerInt);
-  timerInt = null;
-}
-
+function stopTimer(){ if(timerInt) clearInterval(timerInt); timerInt = null; }
 function updateTimerUI(){
   const m = Math.floor(timeLeft/60);
   const s = timeLeft%60;
   document.getElementById("timerDisplay").textContent =
     (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
 }
-
 function closeTest(){
   stopTimer();
   document.getElementById("testBox").style.display = "none";
@@ -656,11 +583,7 @@ function closeTest(){
 
 function submitTest(){
   stopTimer();
-
-  if(currentQuestions.length === 0){
-    alert("No questions.");
-    return;
-  }
+  if(currentQuestions.length === 0){ alert("No questions."); return; }
 
   let score = 0;
   currentQuestions.forEach((q,i)=>{
@@ -682,16 +605,12 @@ function submitTest(){
     pct: pct,
     course: currentCourse,
     at: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(()=>{
-    loadLeaderboard();
-  });
+  }).then(()=>{ loadLeaderboard(); });
 
   closeTest();
 }
 
-/* ==========================
-   LEADERBOARD
-========================== */
+/* LEADERBOARD */
 function loadLeaderboard(){
   const div = document.getElementById("leaderboard");
   div.innerHTML = "Loading...";
@@ -706,7 +625,6 @@ function loadLeaderboard(){
         div.innerHTML = `<div class="muted">No scores yet.</div>`;
         return;
       }
-
       let html = "";
       let i = 1;
       snapshot.forEach(doc=>{
@@ -725,21 +643,36 @@ function loadLeaderboard(){
 }
 </script>
 
-<!-- =========================
-  IMPORTANT: FIRESTORE RULES (copy in Firebase -> Firestore -> Rules)
-  Use THIS for now (logged-in users can read/write).
-  Later I will give "Admin-only write" rules.
-========================= -->
-<!--
+<!-- FIRESTORE RULES (paste in Firebase -> Firestore -> Rules)
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.email == "dnyanrui90@gmail.com" ||
+        request.auth.token.email == "pawarjai999@gmail.com"
+      );
+    }
+
+    match /courses/{courseId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+
+      match /questions/{qid} {
+        allow read: if signedIn();
+        allow write: if isAdmin();
+      }
+    }
+
+    match /leaderboard/{docId} {
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update, delete: if false;
     }
   }
 }
 -->
-
 </body>
 </html>
