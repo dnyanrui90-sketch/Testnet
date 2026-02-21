@@ -5,20 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TESTNEST</title>
   <style>
-    :root{
-      --bg:#0b1020;--card:rgba(255,255,255,0.08);--border:rgba(255,255,255,0.14);
-      --text:#eaf0ff;--muted:rgba(234,240,255,0.70);--brand:#ff6b35;--brand2:#4b7bec;
-      --ok:#2ecc71;--bad:#ff4757;--shadow:0 18px 60px rgba(0,0,0,0.35);--radius:18px;
-    }
+    :root{--bg:#0b1020;--card:rgba(255,255,255,0.08);--border:rgba(255,255,255,0.14);--text:#eaf0ff;--muted:rgba(234,240,255,0.70);--brand:#ff6b35;--brand2:#4b7bec;--ok:#2ecc71;--bad:#ff4757;--shadow:0 18px 60px rgba(0,0,0,0.35);--radius:18px;}
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background:radial-gradient(1200px 700px at 20% 0%,rgba(75,123,236,0.28),transparent 55%),
-                 radial-gradient(900px 600px at 80% 10%,rgba(255,107,53,0.22),transparent 60%),
-                 linear-gradient(180deg,#070a14,var(--bg));
-      color:var(--text);min-height:100vh;
-    }
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(1200px 700px at 20% 0%,rgba(75,123,236,0.28),transparent 55%),radial-gradient(900px 600px at 80% 10%,rgba(255,107,53,0.22),transparent 60%),linear-gradient(180deg,#070a14,var(--bg));color:var(--text);min-height:100vh;}
     .topbar{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);background:rgba(10,14,30,0.65);border-bottom:1px solid rgba(255,255,255,0.08);}
     .topbar-inner{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
     .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:0.6px;}
@@ -48,30 +37,26 @@
     .divider{height:1px;background:rgba(255,255,255,0.10);margin:14px 0}
     .tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:var(--muted);}
     .course{padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;}
-    .course b{font-size:15px}
-    .lock{color:#ffd2c2}
+    .course b{font-size:15px}.lock{color:#ffd2c2}
     .timer{font-family:ui-monospace,monospace;font-weight:900;font-size:16px;color:#ffd2c2;}
     .qbox{border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);border-radius:16px;padding:12px;margin:10px 0;}
     .opt{display:block;padding:8px 10px;margin:7px 0;border-radius:12px;border:1px solid rgba(255,255,255,0.10);background:rgba(0,0,0,0.18)}
     .small{font-size:12px;color:var(--muted)}
     .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.82);color:var(--text);border:1px solid rgba(255,255,255,0.12);padding:10px 18px;border-radius:12px;display:none;z-index:999;max-width:92vw;font-size:14px;}
     .hero{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
-    .hero h1{margin:0;font-size:28px}
-    .hero .sub{color:var(--muted);max-width:60ch;line-height:1.5}
+    .hero h1{margin:0;font-size:28px}.hero .sub{color:var(--muted);max-width:60ch;line-height:1.5}
     .login-msg{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:13px;display:none;}
     .login-msg.info{background:rgba(75,123,236,0.18);border:1px solid rgba(75,123,236,0.35);color:#a0c4ff;}
     .login-msg.error{background:rgba(255,71,87,0.18);border:1px solid rgba(255,71,87,0.35);color:#ffb3bb;}
   </style>
 </head>
 <body>
-
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand"><div class="logo"></div><span>TESTNEST</span></div>
     <div class="pill" id="topStatus">Not logged in</div>
   </div>
 </div>
-
 <div class="wrap">
   <div class="card" id="loginCard">
     <div class="hero">
@@ -79,17 +64,15 @@
         <h1>Learn • Practice • Test</h1>
         <div class="sub">Student login for tests + Leaderboard. Admin login to create courses, add unlimited questions, and lock paid courses.</div>
         <div style="margin-top:10px" class="row">
-          <span class="tag">✅ Timer Test</span>
-          <span class="tag">✅ Auto Result</span>
-          <span class="tag">✅ Leaderboard</span>
-          <span class="tag">✅ Paid Lock</span>
+          <span class="tag">✅ Timer Test</span><span class="tag">✅ Auto Result</span>
+          <span class="tag">✅ Leaderboard</span><span class="tag">✅ Paid Lock</span>
           <span class="tag">✅ Admin Edit/Delete</span>
         </div>
       </div>
       <div style="min-width:260px;width:320px;max-width:100%;">
         <div class="card" style="box-shadow:none;background:rgba(255,255,255,0.06);">
           <h3 style="margin:0 0 8px 0;">Login</h3>
-          <div class="muted">iPhone uses Popup. Android/Desktop uses Redirect to Google.</div>
+          <div class="muted">Click your login type below. You will be redirected to Google.</div>
           <div class="btnrow" style="margin-top:12px;">
             <button class="btn-brand" id="btnStudent" onclick="loginAs('student')">Student Login (Google)</button>
             <button class="btn-blue" id="btnAdmin" onclick="loginAs('admin')">Admin Login (Google)</button>
@@ -172,13 +155,13 @@
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <script>
+// ── FIREBASE INIT ──
 const firebaseConfig = {
   apiKey: "AIzaSyAPML8zK9qgRQbUyv7lMVOtt0c5Osjyw_A",
   authDomain: "testnest-education.firebaseapp.com",
@@ -192,124 +175,157 @@ const auth = firebase.auth();
 const db   = firebase.firestore();
 
 const ADMIN_EMAILS = ["dnyanrui90@gmail.com","pawarjai999@gmail.com"];
-let intendedRole = "student";
-let currentRole  = "student";
 
-function $(id){ return document.getElementById(id); }
-function toast(msg){ const el=$("toast"); el.textContent=msg; el.style.display="block"; setTimeout(()=>el.style.display="none",2800); }
-function setTopStatus(msg){ $("topStatus").textContent=msg; }
-function showMsg(msg,type="info"){ const el=$("loginMsg"); el.textContent=msg; el.className="login-msg "+type; el.style.display="block"; }
-function hideMsg(){ $("loginMsg").style.display="none"; }
-function setBtns(dis){ $("btnStudent").disabled=dis; $("btnAdmin").disabled=dis; }
-function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent); }
-function escQ(s){ return (s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
+function g(id){ return document.getElementById(id); }
+function toast(m){ const e=g("toast"); e.textContent=m; e.style.display="block"; setTimeout(()=>e.style.display="none",2800); }
+function setTop(m){ g("topStatus").textContent=m; }
+function showMsg(m,t="info"){ const e=g("loginMsg"); e.textContent=m; e.className="login-msg "+t; e.style.display="block"; }
+function hideMsg(){ g("loginMsg").style.display="none"; }
+function setBtns(d){ g("btnStudent").disabled=d; g("btnAdmin").disabled=d; }
 function esc(s){ return (s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function escQ(s){ return (s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
 
+// ── KEY FIX: store role in localStorage (survives redirect better than sessionStorage) ──
 function loginAs(role){
-  intendedRole = role;
-  sessionStorage.setItem("intendedRole", role);
+  localStorage.setItem("tn_role", role);
   setBtns(true);
+  showMsg("Redirecting to Google…","info");
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt:"select_account" });
-  if(isIOS()){
-    showMsg("Opening Google login popup…","info");
-    auth.signInWithPopup(provider).catch(err=>{
-      if(err.code==="auth/popup-blocked"||err.code==="auth/popup-closed-by-user"||err.code==="auth/operation-not-supported-in-this-environment"){
-        showMsg("Redirecting to Google…","info");
-        auth.signInWithRedirect(provider);
-      } else { showMsg("Error: "+err.message,"error"); setBtns(false); }
-    });
-  } else {
-    showMsg("Redirecting to Google…","info");
-    auth.signInWithRedirect(provider);
+  // Always use redirect - works on all devices
+  auth.signInWithRedirect(provider);
+}
+
+// ── HANDLE REDIRECT RESULT - this runs when Google sends user back ──
+auth.getRedirectResult().then(function(result){
+  if(result && result.user){
+    // user logged in via redirect - onAuthStateChanged will handle the rest
+    console.log("Redirect login success:", result.user.email);
   }
-}
-
-auth.getRedirectResult().then(result=>{
-  if(result && result.user){ const saved=sessionStorage.getItem("intendedRole"); if(saved) intendedRole=saved; }
-}).catch(err=>{ if(err&&err.code&&err.code!=="auth/no-current-user"){ showMsg("Login failed: "+err.message,"error"); setBtns(false); } });
-
-function logout(){
-  auth.signOut().then(()=>{ $("app").style.display="none"; $("loginCard").style.display="block"; setTopStatus("Not logged in"); sessionStorage.removeItem("intendedRole"); setBtns(false); hideMsg(); });
-}
-
-auth.onAuthStateChanged(user=>{
-  if(!user) return;
-  const saved=sessionStorage.getItem("intendedRole"); if(saved) intendedRole=saved;
-  const email=(user.email||"").toLowerCase();
-  currentRole=(intendedRole==="admin"&&ADMIN_EMAILS.map(x=>x.toLowerCase()).includes(email))?"admin":"student";
-  $("loginCard").style.display="none"; $("app").style.display="block"; hideMsg(); setBtns(false);
-  $("userName").textContent=user.displayName||"Student"; $("userEmail").textContent=user.email||""; $("userRole").textContent="Role: "+currentRole.toUpperCase();
-  setTopStatus((user.displayName||"User")+" • "+currentRole.toUpperCase());
-  $("adminCard").style.display=currentRole==="admin"?"block":"none";
-  loadCourses(); loadLeaderboard(); refreshCoursePick();
+}).catch(function(err){
+  if(err && err.code && err.code !== "auth/no-current-user"){
+    showMsg("Login error: " + err.message, "error");
+    setBtns(false);
+    console.error("Redirect error:", err);
+  }
 });
 
-function addCourse(){
-  if(currentRole!=="admin") return alert("Admin only");
-  const name=$("courseName").value.trim(); const paid=$("paidCourse").checked;
-  if(!name) return alert("Enter course name");
-  db.collection("courses").doc(name).set({paid,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email||""},{merge:true})
-    .then(()=>{ toast("Course saved!"); loadCourses(); refreshCoursePick(); }).catch(e=>alert(e.message));
+function logout(){
+  auth.signOut().then(()=>{
+    localStorage.removeItem("tn_role");
+    g("app").style.display="none";
+    g("loginCard").style.display="block";
+    setTop("Not logged in");
+    setBtns(false);
+    hideMsg();
+  });
 }
 
-function refreshCoursePick(){
-  const sel=$("coursePick"); if(!sel) return;
-  sel.innerHTML='<option value="">Select course</option>';
-  db.collection("courses").get().then(snap=>{ snap.forEach(doc=>{ const o=document.createElement("option"); o.value=doc.id; o.textContent=doc.id; sel.appendChild(o); }); }).catch(()=>{});
-}
+// ── AUTH STATE - fires when user is detected (including after redirect) ──
+auth.onAuthStateChanged(function(user){
+  if(!user){
+    // No user - show login page
+    g("loginCard").style.display="block";
+    g("app").style.display="none";
+    return;
+  }
 
-function clearQuestionForm(){ ["questionText","opt1","opt2","opt3","opt4","correct"].forEach(id=>$(id).value=""); }
+  // User is logged in!
+  const savedRole = localStorage.getItem("tn_role") || "student";
+  const email = (user.email||"").toLowerCase();
+  const isAdmin = ADMIN_EMAILS.map(x=>x.toLowerCase()).includes(email);
+  const role = (savedRole === "admin" && isAdmin) ? "admin" : "student";
 
-function addQuestion(){
-  if(currentRole!=="admin") return alert("Admin only");
-  const course=($("coursePick").value||"").trim(); if(!course) return alert("Select a course first");
-  const q=$("questionText").value.trim(),o1=$("opt1").value.trim(),o2=$("opt2").value.trim(),o3=$("opt3").value.trim(),o4=$("opt4").value.trim();
-  const correct=parseInt($("correct").value,10),time=parseInt($("timeLimit").value,10);
-  if(!q||!o1||!o2||!o3||!o4) return alert("Fill question + all options");
-  if(isNaN(correct)||correct<0||correct>3) return alert("Correct must be 0-3");
-  if(isNaN(time)||time<=0) return alert("Time must be > 0 minutes");
-  db.collection("courses").doc(course).collection("questions").add({question:q,options:[o1,o2,o3,o4],correct,time,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email||""})
-    .then(()=>{ toast("Question saved!"); clearQuestionForm(); }).catch(e=>alert(e.message));
-}
+  g("loginCard").style.display="none";
+  g("app").style.display="block";
+  hideMsg();
+  setBtns(false);
 
-function loadCourses(){
-  const div=$("courseList"); div.innerHTML="Loading...";
-  db.collection("courses").get().then(snapshot=>{
-    if(snapshot.empty){ div.innerHTML='<div class="muted">No courses yet.</div>'; return; }
+  g("userName").textContent  = user.displayName || "Student";
+  g("userEmail").textContent = user.email || "";
+  g("userRole").textContent  = "Role: " + role.toUpperCase();
+  setTop((user.displayName||"User") + " • " + role.toUpperCase());
+  g("adminCard").style.display = role==="admin" ? "block":"none";
+
+  loadCourses(role);
+  loadLeaderboard();
+  if(role==="admin") refreshCoursePick();
+});
+
+// ── COURSES ──
+function loadCourses(role){
+  const div=g("courseList"); div.innerHTML="Loading...";
+  db.collection("courses").get().then(snap=>{
+    if(snap.empty){ div.innerHTML='<div class="muted">No courses yet.</div>'; return; }
     let html="";
-    snapshot.forEach(doc=>{ const name=doc.id,paid=!!doc.data().paid;
-      html+=`<div class="course"><div><b>${esc(name)}</b><br/><span class="small">${paid?"Paid (Locked)":"Free (Test available)"}</span></div><div style="min-width:160px;text-align:right">${paid?'<span class="tag lock">🔒 Locked</span>':`<button class="btn-ok" onclick="startTest('${escQ(name)}')">Start Test</button>`}</div></div>`;
+    snap.forEach(doc=>{
+      const name=doc.id, paid=!!doc.data().paid;
+      html+=`<div class="course">
+        <div><b>${esc(name)}</b><br/><span class="small">${paid?"Paid (Locked)":"Free (Test available)"}</span></div>
+        <div style="min-width:160px;text-align:right">${paid?'<span class="tag lock">🔒 Locked</span>':`<button class="btn-ok" onclick="startTest('${escQ(name)}')">Start Test</button>`}</div>
+      </div>`;
     });
     div.innerHTML=html;
   }).catch(e=>{ div.innerHTML=`<div class="muted">${esc(e.message)}</div>`; });
 }
 
+function addCourse(){
+  const name=g("courseName").value.trim(), paid=g("paidCourse").checked;
+  if(!name) return alert("Enter course name");
+  db.collection("courses").doc(name).set({paid,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email||""},{merge:true})
+    .then(()=>{ toast("Course saved!"); loadCourses("admin"); refreshCoursePick(); }).catch(e=>alert(e.message));
+}
+
+function refreshCoursePick(){
+  const sel=g("coursePick"); if(!sel) return;
+  sel.innerHTML='<option value="">Select course</option>';
+  db.collection("courses").get().then(snap=>{
+    snap.forEach(doc=>{ const o=document.createElement("option"); o.value=doc.id; o.textContent=doc.id; sel.appendChild(o); });
+  }).catch(()=>{});
+}
+
+function clearQuestionForm(){ ["questionText","opt1","opt2","opt3","opt4","correct"].forEach(id=>g(id).value=""); }
+
+function addQuestion(){
+  const course=(g("coursePick").value||"").trim(); if(!course) return alert("Select a course first");
+  const q=g("questionText").value.trim(),o1=g("opt1").value.trim(),o2=g("opt2").value.trim(),o3=g("opt3").value.trim(),o4=g("opt4").value.trim();
+  const correct=parseInt(g("correct").value,10), time=parseInt(g("timeLimit").value,10);
+  if(!q||!o1||!o2||!o3||!o4) return alert("Fill question + all options");
+  if(isNaN(correct)||correct<0||correct>3) return alert("Correct must be 0-3");
+  if(isNaN(time)||time<=0) return alert("Time must be > 0 minutes");
+  db.collection("courses").doc(course).collection("questions").add({
+    question:q,options:[o1,o2,o3,o4],correct,time,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email||""
+  }).then(()=>{ toast("Question saved!"); clearQuestionForm(); }).catch(e=>alert(e.message));
+}
+
+// ── TEST ──
 let currentCourse="",currentQuestions=[],timeLeft=0,timerInt=null;
 
 function startTest(course){
-  currentCourse=course; $("testTitle").textContent="Test: "+course; $("testBox").style.display="block";
-  $("questionArea").innerHTML="Loading..."; $("qCountInfo").textContent=""; stopTimer();
-  db.collection("courses").doc(course).collection("questions").get().then(snapshot=>{
-    currentQuestions=[]; snapshot.forEach(doc=>currentQuestions.push(doc.data()));
-    if(!currentQuestions.length){ $("questionArea").innerHTML='<div class="muted">No questions yet.</div>'; return; }
-    $("qCountInfo").textContent=currentQuestions.length+" questions"; renderTest();
-    startTimer((currentQuestions[0].time||5)*60);
+  currentCourse=course; g("testTitle").textContent="Test: "+course;
+  g("testBox").style.display="block"; g("questionArea").innerHTML="Loading..."; g("qCountInfo").textContent=""; stopTimer();
+  db.collection("courses").doc(course).collection("questions").get().then(snap=>{
+    currentQuestions=[]; snap.forEach(doc=>currentQuestions.push(doc.data()));
+    if(!currentQuestions.length){ g("questionArea").innerHTML='<div class="muted">No questions yet.</div>'; return; }
+    g("qCountInfo").textContent=currentQuestions.length+" questions";
+    renderTest(); startTimer((currentQuestions[0].time||5)*60);
   }).catch(e=>alert(e.message));
 }
 
 function renderTest(){
-  const div=$("questionArea"); div.innerHTML="";
+  const div=g("questionArea"); div.innerHTML="";
   currentQuestions.forEach((q,i)=>{
-    let opts=""; (q.options||[]).forEach((opt,idx)=>{ opts+=`<label class="opt"><input type="radio" name="q${i}" value="${idx}" style="accent-color:var(--brand)"><span style="margin-left:8px">${esc(opt)}</span></label>`; });
+    let opts="";
+    (q.options||[]).forEach((o,idx)=>{ opts+=`<label class="opt"><input type="radio" name="q${i}" value="${idx}" style="accent-color:var(--brand)"><span style="margin-left:8px">${esc(o)}</span></label>`; });
     div.innerHTML+=`<div class="qbox"><b>${i+1}. ${esc(q.question)}</b><div style="margin-top:8px">${opts}</div></div>`;
   });
 }
 
-function startTimer(sec){ stopTimer(); timeLeft=sec; updateTimerUI(); timerInt=setInterval(()=>{ timeLeft--; updateTimerUI(); if(timeLeft<=0){stopTimer();submitTest();} },1000); }
+function startTimer(s){ stopTimer(); timeLeft=s; updateTimer(); timerInt=setInterval(()=>{ timeLeft--; updateTimer(); if(timeLeft<=0){stopTimer();submitTest();} },1000); }
 function stopTimer(){ if(timerInt){clearInterval(timerInt);timerInt=null;} }
-function updateTimerUI(){ const m=Math.floor(timeLeft/60),s=timeLeft%60; $("timerDisplay").textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s; }
-function closeTest(){ stopTimer(); $("testBox").style.display="none"; }
+function updateTimer(){ const m=Math.floor(timeLeft/60),s=timeLeft%60; g("timerDisplay").textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s; }
+function closeTest(){ stopTimer(); g("testBox").style.display="none"; }
 
 function submitTest(){
   stopTimer(); if(!currentQuestions.length){alert("No questions.");return;}
@@ -322,12 +338,13 @@ function submitTest(){
   closeTest();
 }
 
+// ── LEADERBOARD ──
 function loadLeaderboard(){
-  const div=$("leaderboard"); div.innerHTML="Loading...";
-  db.collection("leaderboard").orderBy("pct","desc").orderBy("score","desc").limit(10).get().then(snapshot=>{
-    if(snapshot.empty){div.innerHTML='<div class="muted">No scores yet.</div>';return;}
+  const div=g("leaderboard"); div.innerHTML="Loading...";
+  db.collection("leaderboard").orderBy("pct","desc").orderBy("score","desc").limit(10).get().then(snap=>{
+    if(snap.empty){div.innerHTML='<div class="muted">No scores yet.</div>';return;}
     let html="",i=1;
-    snapshot.forEach(doc=>{ const d=doc.data(); html+=`<div style="margin:10px 0;padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.05)"><b>${i++}. ${esc(d.user||"Student")}</b><div class="small">${esc(d.course||"")} • ${d.score}/${d.total} • ${d.pct}%</div></div>`; });
+    snap.forEach(doc=>{ const d=doc.data(); html+=`<div style="margin:10px 0;padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.05)"><b>${i++}. ${esc(d.user||"Student")}</b><div class="small">${esc(d.course||"")} • ${d.score}/${d.total} • ${d.pct}%</div></div>`; });
     div.innerHTML=html;
   }).catch(e=>{ div.innerHTML=`<div class="muted">${esc(e.message)}</div>`; });
 }
