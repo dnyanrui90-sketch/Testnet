@@ -717,7 +717,8 @@ function loginAs(role){
     if(err.code==="auth/popup-blocked") showMsg("⚠️ Allow popups and try again!","error");
     else if(err.code==="auth/popup-closed-by-user"||err.code==="auth/cancelled-popup-request") showMsg("Login cancelled. Try again.","info");
     else if(err.code==="auth/operation-not-supported-in-this-environment") showMsg("Open testnest26.github.io/Testnet in Chrome to login.","error");
-    else showMsg("Error: "+err.message,"error");
+    else if(err.code==="auth/unauthorized-domain") showMsg("⚠️ Domain not authorized in Firebase. Go to Firebase Console → Authentication → Settings → Authorized Domains → Add: testnest26.github.io","error");
+    else showMsg("Login error (" + (err.code||"unknown") + "): "+err.message,"error");
   });
 }
 function logout(){
