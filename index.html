@@ -862,7 +862,7 @@ TEXT TO EXTRACT FROM:
 ${truncated}
 ---`;
 
-  fetch("https://api.anthropic.com/v1/messages",{
+  fetch("https://corsproxy.io/?https://api.anthropic.com/v1/messages",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -1286,7 +1286,7 @@ In 2-3 simple sentences, explain WHY this answer is correct. Write in easy Engli
 
   const explainKey=getKey();
   if(!explainKey){box.innerHTML=`<b style="color:#be185d;">💡 Answer:</b> The correct answer is <b>"${esc(correctOpt)}"</b>. <span style="font-size:11px;color:#9ca3af;">(Set Anthropic API key for detailed explanations)</span>`;return;}
-  fetch("https://api.anthropic.com/v1/messages",{
+  fetch("https://corsproxy.io/?https://api.anthropic.com/v1/messages",{
     method:"POST",
     headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":explainKey,"anthropic-dangerous-request-allowed":"true"},
     body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:200,
@@ -1377,7 +1377,7 @@ function sendChat(){
   const messages=chatHistory.slice(-10).map(h=>({role:h.role==='assistant'?'assistant':'user',content:h.content}));
   const chatKey=getKey();
   if(!chatKey){showReplyInChat(smartReply(msg));return;}
-  fetch("https://api.anthropic.com/v1/messages",{
+  fetch("https://corsproxy.io/?https://api.anthropic.com/v1/messages",{
     method:"POST",
     headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":chatKey,"anthropic-dangerous-request-allowed":"true"},
     body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:300,
