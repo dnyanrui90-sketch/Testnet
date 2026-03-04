@@ -455,7 +455,7 @@
         <div class="admin-card" id="adminCard" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
             <div class="admin-title">⚙️ Admin Panel</div>
-            <button onclick="setApiKey()" style="background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:10px;padding:6px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;">🔑 Set Anthropic API Key</button>
+            <button onclick="setApiKey()" style="background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:10px;padding:6px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;" id="apiKeyBtn">🔑 Set Anthropic API Key</button>
           </div>
           <div class="card-sub" style="margin-bottom:12px;">Create tests &amp; add questions</div>
           <div class="divider"></div>
@@ -505,7 +505,11 @@
 
           <!-- UPLOAD PDF/WORD PANEL -->
           <div id="panelUpload" style="display:none;">
-            <label class="form-label">Select Test to add questions to</label>
+            <div id="apiKeyWarning" style="display:none;background:#fef2f2;border:2px solid #ef4444;border-radius:12px;padding:12px;margin-bottom:12px;">
+            <b style="color:#dc2626;">&#9888;&#65039; API Key Required!</b><br>
+            <span style="font-size:12px;color:#7f1d1d;">Click <b>Set Anthropic API Key</b> button above first.<br>Get a free key at: <a href="https://console.anthropic.com" target="_blank" style="color:#1d4ed8;font-weight:700;">console.anthropic.com</a></span>
+          </div>
+          <label class="form-label">Select Test to add questions to</label>
             <select class="form-input" id="uploadCoursePick"><option value="">Select test</option></select>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
               <!-- PDF -->
@@ -741,7 +745,7 @@ auth.onAuthStateChanged(user=>{
   g("adminCard").style.display=role==="admin"?"block":"none";
   g("manageBox").style.display=role==="admin"?"block":"none";
   loadCourses();loadLeaderboard();loadPastScores();refreshLbPick();updateRankBadge();
-  if(role==="admin"){refreshCoursePick();refreshManagePick();refreshUploadCoursePick();loadAdminCourseList();const b=g("lbClearBtn");if(b)b.style.display="block";}
+  if(role==="admin"){refreshCoursePick();refreshManagePick();refreshUploadCoursePick();loadAdminCourseList();setTimeout(checkApiKeyWarning,500);const b=g("lbClearBtn");if(b)b.style.display="block";}
 });
 
 // ── ADMIN TABS ──
@@ -750,7 +754,7 @@ function switchAdminTab(tab){
   g("tabUpload").classList.toggle("active",tab==="upload");
   g("panelManual").style.display=tab==="manual"?"block":"none";
   g("panelUpload").style.display=tab==="upload"?"block":"none";
-  if(tab==="upload") refreshUploadCoursePick();
+  if(tab==="upload"){refreshUploadCoursePick();checkApiKeyWarning();}
   if(tab==="manual") refreshCoursePick();
 }
 
@@ -833,6 +837,11 @@ function sendTextToAI(text,course,input,prog,fill,status,result){
     showUploadError(result,prog,"Could not extract text from file. Make sure the file has readable text (not scanned images).");
     input.value="";return;
   }
+  const apiKey=getKey();
+  if(!apiKey){
+    showUploadError(result,prog,"No API key set! Click the 🔑 Set Anthropic API Key button above and enter your key from console.anthropic.com");
+    input.value="";return;
+  }
   // Truncate if too long
   const maxLen=12000;
   const truncated=text.length>maxLen?text.slice(0,maxLen)+"...(truncated)":text;
@@ -858,7 +867,8 @@ ${truncated}
     headers:{
       "Content-Type":"application/json",
       "anthropic-version":"2023-06-01",
-      "x-api-key":apiKey
+      "x-api-key":apiKey,
+      "anthropic-dangerous-request-allowed":"true"
     },
     body:JSON.stringify({
       model:"claude-haiku-4-5-20251001",
@@ -919,7 +929,7 @@ ${truncated}
     // More helpful error messages
     let msg=err.message||"Unknown error";
     if(msg.includes("Failed to fetch")||msg.includes("NetworkError")){
-      msg="Network error — check your internet connection and try again.";
+      msg="Failed to call AI: Check API key is set (click the key button above) and try again. If already set, your network may be blocking the request.";
     } else if(msg.includes("401")||msg.includes("invalid_api_key")){
       msg="Invalid API key. The app's AI key may be expired.";
     } else if(msg.includes("429")){
@@ -1278,7 +1288,7 @@ In 2-3 simple sentences, explain WHY this answer is correct. Write in easy Engli
   if(!explainKey){box.innerHTML=`<b style="color:#be185d;">💡 Answer:</b> The correct answer is <b>"${esc(correctOpt)}"</b>. <span style="font-size:11px;color:#9ca3af;">(Set Anthropic API key for detailed explanations)</span>`;return;}
   fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
-    headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":explainKey},
+    headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":explainKey,"anthropic-dangerous-request-allowed":"true"},
     body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:200,
       messages:[{role:"user",content:prompt}]})
   }).then(r=>r.json()).then(data=>{
@@ -1369,7 +1379,7 @@ function sendChat(){
   if(!chatKey){showReplyInChat(smartReply(msg));return;}
   fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
-    headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":chatKey},
+    headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":chatKey,"anthropic-dangerous-request-allowed":"true"},
     body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:300,
       system:"You are TestNest AI Tutor for Indian school students. Answer in 2-4 sentences with emojis. Show maths steps. Keep it simple and encouraging.",
       messages:messages})
@@ -1528,13 +1538,25 @@ function deleteCourse(name){
 }
 
 function getKey(){return localStorage.getItem("tn_claude_key")||"";}
+function checkApiKeyWarning(){
+  const w=document.getElementById("apiKeyWarning");
+  const b=document.getElementById("apiKeyBtn");
+  const hasKey=!!getKey();
+  if(w) w.style.display=hasKey?"none":"block";
+  if(b){
+    b.style.background=hasKey?"#d1fae5":"#fee2e2";
+    b.style.borderColor=hasKey?"#10b981":"#ef4444";
+    b.style.color=hasKey?"#065f46":"#dc2626";
+    b.textContent=hasKey?"✅ API Key Set":"🔑 Set API Key (Required!)";
+  }
+}
 function setApiKey(){
   const current=getKey();
   const k=prompt("Enter your Anthropic API Key:\n\nGet one free at: https://console.anthropic.com\n(Starts with sk-ant-...)\n\nCurrent: "+(current?"sk-ant-..."+current.slice(-6):"Not set"));
   if(k===null)return;
   if(k&&k.trim().startsWith("sk-")){
     localStorage.setItem("tn_claude_key",k.trim());
-    toast("✅ API Key saved! PDF upload & AI features now active.");
+    toast("✅ API Key saved! PDF upload & AI features now active.");checkApiKeyWarning();
   } else if(k===""){
     localStorage.removeItem("tn_claude_key");
     toast("🗑️ API Key removed.");
