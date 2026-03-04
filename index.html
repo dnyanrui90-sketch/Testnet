@@ -1344,11 +1344,7 @@ function toggleAddInside(course,idx){
   if(!isOpen) panel.classList.add("open");
 }
 
-function clearAddInside(idx){
-  ["aip_chapter_","aip_q_","aip_a_","aip_b_","aip_c_","aip_d_","aip_correct_","aip_time_"].forEach(pre=>{
-    const el=g(pre+idx);if(el)el.value="";
-  });
-}
+
 
 function addInsideQuestion(course,idx){
   const q=(g("aip_q_"+idx)?.value||"").trim();
@@ -1434,26 +1430,6 @@ function setGeminiKey(){
 
 
 // ── LOAD ADMIN COURSE LIST (in admin panel) ──
-function loadAdminCourseList(){
-  const div=g('adminCourseList');if(!div)return;
-  div.innerHTML='<div style="font-size:12px;color:#9ca3af;text-align:center;padding:8px;">Loading...</div>';
-  db.collection('courses').get().then(snap=>{
-    if(snap.empty){div.innerHTML='<div style="font-size:12px;color:#9ca3af;text-align:center;padding:8px;">No tests yet.</div>';return;}
-    let html='';
-    snap.forEach(doc=>{
-      const name=doc.id,paid=!!doc.data().paid;
-      html+=`<div class="mc-row">
-        <span class="mc-name">${paid?'🔒 ':''}<b>${esc(name)}</b></span>
-        <div class="mc-actions">
-          <button class="btn-rename" onclick="openRename('${escQ(name)}')">✏️ Rename</button>
-          <button class="btn-add-inside" onclick="openAddInside('${escQ(name)}')">➕ Add Q</button>
-          <button class="btn-del-course" onclick="confirmDeleteCourse('${escQ(name)}')">🗑️ Delete</button>
-        </div>
-      </div>`;
-    });
-    div.innerHTML=html;
-  }).catch(e=>{div.innerHTML=`<div style="font-size:12px;color:#dc2626;padding:8px;">${esc(e.message)}</div>`;});
-}
 
 // ── RENAME COURSE ──
 function openRename(name){
@@ -1513,10 +1489,7 @@ This will move all questions to the new name.`))return;
 
 // ── DELETE COURSE ──
 async function confirmDeleteCourse(name){
-  if(!confirm('⚠️ DELETE "'+name+'"?
-
-This will permanently delete the test AND all its questions.
-This cannot be undone!'))return;
+  if(!confirm('⚠️ DELETE "'+name+'"? This will permanently delete the test AND all its questions. This cannot be undone!'))return;
   if(!confirm('Are you SURE? This deletes ALL questions in "'+name+'"!'))return;
   try{
     // Delete all questions first
