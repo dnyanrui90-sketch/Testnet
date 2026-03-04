@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TESTNEST – Learn • Practice • Test</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <style>
     :root{
       --bg:#f0f4ff;--white:#fff;--text:#1a1f36;--muted:#6b7280;
@@ -453,7 +455,7 @@
         <div class="admin-card" id="adminCard" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
             <div class="admin-title">⚙️ Admin Panel</div>
-            <button onclick="setGeminiKey()" style="background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:10px;padding:6px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;">🔑 Set AI Key</button>
+            <button onclick="setApiKey()" style="background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:10px;padding:6px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;">🔑 Set Anthropic API Key</button>
           </div>
           <div class="card-sub" style="margin-bottom:12px;">Create tests &amp; add questions</div>
           <div class="divider"></div>
@@ -756,81 +758,179 @@ function switchAdminTab(tab){
 function handleFileUpload(input, type){
   const course=(g("uploadCoursePick").value||"").trim();
   if(!course){alert("Please select a test first!");input.value="";return;}
+  const apiKey=getKey();
+  if(!apiKey){
+    alert("⚠️ Anthropic API Key not set!\n\nClick \'🔑 Set Anthropic API Key\' in the Admin Panel first.\n\nGet a free key at: https://console.anthropic.com");
+    input.value="";return;
+  }
   const file=input.files[0];if(!file)return;
 
   const prog=g("uploadProgress"),fill=g("uploadFill"),status=g("uploadStatus"),result=g("uploadResult");
   prog.style.display="block";result.style.display="none";
   fill.style.width="10%";status.textContent="📖 Reading your file...";
 
-  const reader=new FileReader();
-  reader.onload=function(e){
-    fill.style.width="40%";status.textContent="🤖 AI is extracting questions...";
-    const base64=btoa(String.fromCharCode(...new Uint8Array(e.target.result)));
-    // Call Claude API to extract questions from file
-    const mediaType=type==="pdf"?"application/pdf":"application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    const prompt=`You are a test question extractor. Extract ALL multiple choice questions from this ${type==="pdf"?"PDF":"Word"} document.
-
-Return ONLY a valid JSON array (no other text, no markdown) like this:
-[{"question":"Question text here?","options":["Option A","Option B","Option C","Option D"],"correct":0,"time":5},...]
-
-Where correct is 0=A, 1=B, 2=C, 3=D. If you cannot determine the correct answer, use 0.
-Extract every single MCQ question you find. If no MCQ questions found, return [].`;
-
-    fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",
-      headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","anthropic-beta":"pdfs-2024-09-25"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",max_tokens:4096,
-        messages:[{role:"user",content:[
-          {type:type==="pdf"?"document":"document",source:{type:"base64",media_type:mediaType,data:base64}},
-          {type:"text",text:prompt}
-        ]}]
-      })
-    }).then(r=>r.json()).then(data=>{
-      fill.style.width="80%";status.textContent="💾 Saving questions to test...";
-      const text=data.content?.[0]?.text||"[]";
-      let questions=[];
+  if(type==="pdf"){
+    // Use PDF.js to extract text from PDF in browser
+    const reader=new FileReader();
+    reader.onload=async function(e){
       try{
-        const cleaned=text.replace(/```json|```/g,"").trim();
-        questions=JSON.parse(cleaned);
-      }catch(e){questions=[];}
-
-      if(!questions.length){
-        fill.style.width="100%";prog.style.display="none";
-        result.style.background="#fee2e2";result.style.borderColor="#ef4444";result.style.color="#991b1b";
-        result.textContent="❌ No MCQ questions found. Make sure your file has questions in A/B/C/D format.";
-        result.style.display="block";input.value="";return;
+        fill.style.width="25%";status.textContent="📄 Extracting text from PDF...";
+        const typedArray=new Uint8Array(e.target.result);
+        // Set worker src
+        if(typeof pdfjsLib!=="undefined"){
+          pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+          const pdf=await pdfjsLib.getDocument({data:typedArray}).promise;
+          let fullText="";
+          for(let p=1;p<=pdf.numPages;p++){
+            const page=await pdf.getPage(p);
+            const tc=await page.getTextContent();
+            fullText+=tc.items.map(i=>i.str).join(" ")+"\n";
+          }
+          fill.style.width="60%";status.textContent="🤖 AI is extracting questions...";
+          sendTextToAI(fullText,course,input,prog,fill,status,result);
+        } else {
+          // Fallback: read as text
+          fill.style.width="60%";
+          const tr=new FileReader();
+          tr.onload=function(ev){sendTextToAI(ev.target.result,course,input,prog,fill,status,result);};
+          tr.readAsText(file);
+        }
+      }catch(err){
+        showUploadError(result,prog,"PDF read error: "+err.message);input.value="";
       }
+    };
+    reader.readAsArrayBuffer(file);
 
-      // Save all questions to Firestore
-      const batch=db.batch();
-      questions.forEach(q=>{
-        if(!q.question||!q.options||q.options.length<4)return;
-        const ref=db.collection("courses").doc(course).collection("questions").doc();
-        batch.set(ref,{question:q.question,options:q.options.slice(0,4),correct:q.correct||0,time:q.time||5,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email||"",source:"upload"});
-      });
-      batch.commit().then(()=>{
-        fill.style.width="100%";
-        setTimeout(()=>{
-          prog.style.display="none";
-          result.style.background="#d1fae5";result.style.borderColor="#10b981";result.style.color="#065f46";
-          result.innerHTML=`✅ <b>${questions.length} questions</b> extracted and saved to <b>${esc(course)}</b>! 🎉`;
-          result.style.display="block";
-          toast("✅ "+questions.length+" questions imported!");
-          loadManageQuestions();input.value="";
-        },500);
-      }).catch(err=>{prog.style.display="none";result.style.display="none";alert("Error saving: "+err.message);});
-    }).catch(err=>{
-      prog.style.display="none";
-      result.style.background="#fee2e2";result.style.borderColor="#ef4444";result.style.color="#991b1b";
-      result.textContent="❌ Error: "+err.message+". Check API key & network.";
-      result.style.display="block";input.value="";
-    });
-  };
-  reader.readAsArrayBuffer(file);
+  } else {
+    // Word file — use mammoth.js to extract text
+    const reader=new FileReader();
+    reader.onload=async function(e){
+      try{
+        fill.style.width="30%";status.textContent="📘 Extracting text from Word file...";
+        if(typeof mammoth!=="undefined"){
+          const res=await mammoth.extractRawText({arrayBuffer:e.target.result});
+          fill.style.width="60%";status.textContent="🤖 AI is extracting questions...";
+          sendTextToAI(res.value,course,input,prog,fill,status,result);
+        } else {
+          showUploadError(result,prog,"mammoth.js not loaded. Try refreshing the page.");input.value="";
+        }
+      }catch(err){
+        showUploadError(result,prog,"Word read error: "+err.message);input.value="";
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
 }
 
-// ── COURSES ──
+function showUploadError(result,prog,msg){
+  if(prog)prog.style.display="none";
+  result.style.background="#fee2e2";result.style.borderColor="#ef4444";result.style.color="#991b1b";
+  result.textContent="❌ "+msg;result.style.display="block";
+}
+
+function sendTextToAI(text,course,input,prog,fill,status,result){
+  if(!text||text.trim().length<20){
+    showUploadError(result,prog,"Could not extract text from file. Make sure the file has readable text (not scanned images).");
+    input.value="";return;
+  }
+  // Truncate if too long
+  const maxLen=12000;
+  const truncated=text.length>maxLen?text.slice(0,maxLen)+"...(truncated)":text;
+
+  const prompt=`You are a test question extractor. Read the text below and extract ALL multiple choice questions (MCQ).
+
+Return ONLY a valid JSON array, no other text, no markdown code blocks:
+[{"question":"Question text?","options":["Option A","Option B","Option C","Option D"],"correct":0,"time":5},...]
+
+Rules:
+- correct is 0=A, 1=B, 2=C, 3=D
+- If answer not clear, use 0
+- Only include proper MCQ with 4 options
+- If no MCQ found, return []
+
+TEXT TO EXTRACT FROM:
+---
+${truncated}
+---`;
+
+  fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "anthropic-version":"2023-06-01",
+      "x-api-key":apiKey
+    },
+    body:JSON.stringify({
+      model:"claude-haiku-4-5-20251001",
+      max_tokens:4096,
+      messages:[{role:"user",content:prompt.replace('${truncated}',truncated)}]
+    })
+  }).then(r=>{
+    if(!r.ok){return r.json().then(e=>{throw new Error(e.error?.message||r.statusText);});}
+    return r.json();
+  }).then(data=>{
+    fill.style.width="85%";status.textContent="💾 Saving questions...";
+    const txt=data.content?.[0]?.text||"[]";
+    let questions=[];
+    try{
+      const cleaned=txt.replace(/```json[\s\S]*?```|```[\s\S]*?```/g,m=>m.replace(/```json|```/g,"")).replace(/```/g,"").trim();
+      // Find JSON array in response
+      const arrMatch=cleaned.match(/\[[\s\S]*\]/);
+      questions=arrMatch?JSON.parse(arrMatch[0]):[];
+    }catch(e){questions=[];}
+
+    if(!questions.length){
+      fill.style.width="100%";prog.style.display="none";
+      result.style.background="#fef3c7";result.style.borderColor="#f59e0b";result.style.color="#92400e";
+      result.innerHTML="⚠️ No MCQ questions found in this file.<br><small>Make sure questions are formatted like:<br><b>1. Question?</b><br>A) Option &nbsp; B) Option &nbsp; C) Option &nbsp; D) Option<br>Answer: A</small>";
+      result.style.display="block";input.value="";return;
+    }
+
+    // Save to Firestore
+    const batch=db.batch();
+    questions.forEach(q=>{
+      if(!q.question||!q.options||q.options.length<2)return;
+      // Pad options to 4 if needed
+      while(q.options.length<4)q.options.push("—");
+      const ref=db.collection("courses").doc(course).collection("questions").doc();
+      batch.set(ref,{
+        question:q.question,
+        options:q.options.slice(0,4),
+        correct:Math.min(q.correct||0,3),
+        time:q.time||5,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy:auth.currentUser.email||"",
+        source:"upload"
+      });
+    });
+    batch.commit().then(()=>{
+      fill.style.width="100%";
+      setTimeout(()=>{
+        prog.style.display="none";
+        result.style.background="#d1fae5";result.style.borderColor="#10b981";result.style.color="#065f46";
+        result.innerHTML=`✅ <b>${questions.length} questions</b> extracted and saved to <b>${esc(course)}</b>! 🎉`;
+        result.style.display="block";
+        toast("✅ "+questions.length+" questions imported successfully!");
+        loadManageQuestions();input.value="";
+      },400);
+    }).catch(err=>showUploadError(result,prog,"Firestore error: "+err.message));
+  }).catch(err=>{
+    prog.style.display="none";
+    // More helpful error messages
+    let msg=err.message||"Unknown error";
+    if(msg.includes("Failed to fetch")||msg.includes("NetworkError")){
+      msg="Network error — check your internet connection and try again.";
+    } else if(msg.includes("401")||msg.includes("invalid_api_key")){
+      msg="Invalid API key. The app's AI key may be expired.";
+    } else if(msg.includes("429")){
+      msg="Too many requests. Wait a moment and try again.";
+    }
+    showUploadError(result,prog,msg);
+    input.value="";
+  });
+}
+
+// ── COURSES ──// ── COURSES ──
 let activeClass='all',allCourseDocs=[];
 function setClass(cls,btn){activeClass=cls;document.querySelectorAll('.class-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderFilteredCourses();}
 function filterCourses(){renderFilteredCourses();}
@@ -1174,9 +1274,12 @@ The correct answer is: "${correctOpt}" (Option ${['A','B','C','D'][q.correct]})
 
 In 2-3 simple sentences, explain WHY this answer is correct. Write in easy English for Indian school students. Use 1-2 relevant emojis. Be educational and encouraging.`;
 
+  const explainKey=getKey();
+  if(!explainKey){box.innerHTML=`<b style="color:#be185d;">💡 Answer:</b> The correct answer is <b>"${esc(correctOpt)}"</b>. <span style="font-size:11px;color:#9ca3af;">(Set Anthropic API key for detailed explanations)</span>`;return;}
   fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,
+    method:"POST",
+    headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":explainKey},
+    body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:200,
       messages:[{role:"user",content:prompt}]})
   }).then(r=>r.json()).then(data=>{
     const text=data.content?.[0]?.text||"";
@@ -1262,9 +1365,12 @@ function sendChat(){
     g('chatMsgs').scrollTop=g('chatMsgs').scrollHeight;
   }
   const messages=chatHistory.slice(-10).map(h=>({role:h.role==='assistant'?'assistant':'user',content:h.content}));
+  const chatKey=getKey();
+  if(!chatKey){showReplyInChat(smartReply(msg));return;}
   fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,
+    method:"POST",
+    headers:{"Content-Type":"application/json","anthropic-version":"2023-06-01","x-api-key":chatKey},
+    body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:300,
       system:"You are TestNest AI Tutor for Indian school students. Answer in 2-4 sentences with emojis. Show maths steps. Keep it simple and encouraging.",
       messages:messages})
   }).then(r=>r.json()).then(data=>{
@@ -1421,12 +1527,23 @@ function deleteCourse(name){
   }).catch(e=>alert("Delete error: "+e.message));
 }
 
-function setGeminiKey(){
-  const k=prompt("Gemini API Key (optional):\nGet free at: https://aistudio.google.com/app/apikey");
+function getKey(){return localStorage.getItem("tn_claude_key")||"";}
+function setApiKey(){
+  const current=getKey();
+  const k=prompt("Enter your Anthropic API Key:\n\nGet one free at: https://console.anthropic.com\n(Starts with sk-ant-...)\n\nCurrent: "+(current?"sk-ant-..."+current.slice(-6):"Not set"));
   if(k===null)return;
-  if(k&&k.trim()){localStorage.setItem("tn_gemini_key",k.trim());toast("✅ Key saved!");}
-  else if(k===""){localStorage.removeItem("tn_gemini_key");toast("🗑️ Key removed.");}
+  if(k&&k.trim().startsWith("sk-")){
+    localStorage.setItem("tn_claude_key",k.trim());
+    toast("✅ API Key saved! PDF upload & AI features now active.");
+  } else if(k===""){
+    localStorage.removeItem("tn_claude_key");
+    toast("🗑️ API Key removed.");
+  } else if(k&&k.trim()){
+    alert("⚠️ That doesn\'t look like a valid Anthropic key.\nIt should start with \'sk-ant-\'\nGet one at: https://console.anthropic.com");
+  }
 }
+// Keep old name as alias for backward compat
+function setGeminiKey(){setApiKey();}
 
 
 // ── LOAD ADMIN COURSE LIST (in admin panel) ──
