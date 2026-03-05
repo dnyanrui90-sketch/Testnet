@@ -271,6 +271,25 @@
     .chat-input-row input:focus{border-color:#a5b4fc;}
     .chat-send{background:linear-gradient(135deg,#4f46e5,#7c3aed);border:none;border-radius:10px;padding:8px 12px;color:white;font-size:16px;cursor:pointer;}
 
+
+    /* HIERARCHY MANAGER */
+    .hier-section{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:10px;}
+    .hier-section-title{font-size:13px;font-weight:800;color:#4f46e5;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+    .hier-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:white;border:1.5px solid #e2e8f0;border-radius:10px;margin-bottom:6px;}
+    .hier-row-name{flex:1;font-size:13px;font-weight:700;}
+    .hier-row-actions{display:flex;gap:4px;}
+    .btn-hier-edit{background:#eef2ff;border:1.5px solid #c7d2fe;color:#4f46e5;border-radius:7px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer;}
+    .btn-hier-del{background:#fef2f2;border:1.5px solid #fecaca;color:#dc2626;border-radius:7px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer;}
+    .btn-hier-add{background:#d1fae5;border:1.5px solid #6ee7b7;color:#065f46;border-radius:7px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer;}
+    .hier-add-row{display:flex;gap:6px;margin-top:8px;}
+    .hier-add-row input{flex:1;padding:8px 10px;border-radius:9px;border:1.5px solid #e2e8f0;font-family:'Nunito',sans-serif;font-size:13px;outline:none;}
+    .hier-add-row input:focus{border-color:#a5b4fc;}
+    .hier-add-row button{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:none;border-radius:9px;padding:8px 14px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;}
+    .hier-class-select{width:100%;padding:9px 12px;border-radius:10px;border:2px solid #e2e8f0;background:#f8fafc;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#1a1f36;outline:none;margin-bottom:10px;}
+    .hier-class-select:focus{border-color:#a5b4fc;}
+    .upload-chapter-row{display:flex;gap:8px;margin-bottom:10px;}
+    .upload-chapter-row select{flex:1;padding:9px 12px;border-radius:10px;border:2px solid #e2e8f0;background:#f8fafc;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;}
+
     /* MOBILE */
     @media(max-width:900px){
       .app-grid{grid-template-columns:1fr;}
@@ -457,33 +476,65 @@
             <div class="admin-title">⚙️ Admin Panel</div>
             <button onclick="setApiKey()" style="background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:10px;padding:6px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;" id="apiKeyBtn">🔑 Set Anthropic API Key</button>
           </div>
-          <div class="card-sub" style="margin-bottom:12px;">Create tests &amp; add questions</div>
-          <div class="divider"></div>
-          <label class="form-label">Test Name</label>
-          <input type="text" class="form-input" id="courseName" placeholder="e.g., Class 6 Maths / NEET / JEE"/>
-          <div class="check-row"><input type="checkbox" id="paidCourse"><label for="paidCourse">🔒 Paid Test (Locked)</label></div>
-          <button class="btn-save" onclick="addCourse()">💾 Save Test</button>
-
-          <!-- MANAGE EXISTING TESTS: rename / delete / add inside -->
-          <div class="divider"></div>
-          <div class="manage-courses-title">📋 Manage Existing Tests</div>
-          <div id="adminCourseList"><div style="font-size:12px;color:#9ca3af;text-align:center;padding:10px;">Loading tests...</div></div>
-
+          <div class="card-sub" style="margin-bottom:12px;">Manage Class → Subject → Chapter structure</div>
           <div class="divider"></div>
 
-          <!-- ADMIN TABS: Manual Question / Upload PDF-Word -->
+          <!-- ADMIN TABS -->
           <div class="admin-tabs">
-            <button class="admin-tab active" id="tabManual" onclick="switchAdminTab('manual')">✏️ Add Question</button>
+            <button class="admin-tab active" id="tabHier" onclick="switchAdminTab('hier')">🏫 Manage Structure</button>
+            <button class="admin-tab" id="tabManual" onclick="switchAdminTab('manual')">✏️ Add Question</button>
             <button class="admin-tab" id="tabUpload" onclick="switchAdminTab('upload')">📄 Upload PDF/Word</button>
           </div>
 
-          <!-- MANUAL QUESTION PANEL -->
-          <div id="panelManual">
-            <label class="form-label">Add Question to Test</label>
-            <select class="form-input" id="coursePick"><option value="">Select test</option></select>
-            <label class="form-label">Chapter / Topic Name <span style="color:#9ca3af;font-weight:600;">(optional)</span></label>
-            <input type="text" class="form-input" id="chapterName" placeholder="e.g., Chapter 3 – Fractions, Photosynthesis, Algebra..."/>
-            <label class="form-label">Question</label>
+          <!-- TAB 1: HIERARCHY MANAGER -->
+          <div id="panelHier">
+            <!-- Class selector -->
+            <label class="form-label">Select Class to manage</label>
+            <select class="hier-class-select" id="hierClassSel" onchange="loadHierClass()">
+              <option value="">— Select Class —</option>
+              <option>Balvatika</option><option>Class 1</option><option>Class 2</option>
+              <option>Class 3</option><option>Class 4</option><option>Class 5</option>
+              <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+            </select>
+
+            <div id="hierSubjectBox" style="display:none;">
+              <div class="hier-section">
+                <div class="hier-section-title">📚 Subjects <span id="hierSubjectClass" style="color:#6b7280;"></span></div>
+                <div id="hierSubjectList"></div>
+                <div class="hier-add-row">
+                  <input type="text" id="newSubjectName" placeholder="Add new subject e.g. Mathematics"/>
+                  <button onclick="addSubject()">➕ Add</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="hierChapterBox" style="display:none;">
+              <div class="hier-section">
+                <div class="hier-section-title">📂 Chapters in: <span id="hierChapterSubject" style="color:#4f46e5;"></span></div>
+                <div id="hierChapterList"></div>
+                <div class="hier-add-row">
+                  <input type="text" id="newChapterName" placeholder="Add chapter e.g. Chapter 3 – Fractions"/>
+                  <button onclick="addChapter()">➕ Add</button>
+                </div>
+                <button style="background:#f1f5f9;border:none;border-radius:9px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;" onclick="backToSubjects()">← Back to Subjects</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: MANUAL QUESTION -->
+          <div id="panelManual" style="display:none;">
+            <label class="form-label">Class</label>
+            <select class="form-input" id="qClass" onchange="loadQSubjects()">
+              <option value="">— Select Class —</option>
+              <option>Balvatika</option><option>Class 1</option><option>Class 2</option>
+              <option>Class 3</option><option>Class 4</option><option>Class 5</option>
+              <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+            </select>
+            <label class="form-label">Subject</label>
+            <select class="form-input" id="qSubject" onchange="loadQChapters()"><option value="">— Select Subject —</option></select>
+            <label class="form-label">Chapter</label>
+            <select class="form-input" id="qChapter"><option value="">— Select Chapter —</option></select>
+            <label class="form-label" style="margin-top:10px;">Question</label>
             <textarea class="form-input" id="questionText" placeholder="Type your question here..."></textarea>
             <div class="form-row">
               <div><label class="form-label">Option A</label><input type="text" class="form-input" id="opt1" placeholder="Option A"/></div>
@@ -494,8 +545,8 @@
               <div><label class="form-label">Option D</label><input type="text" class="form-input" id="opt4" placeholder="Option D"/></div>
             </div>
             <div class="form-row">
-              <div><label class="form-label">Correct (0=A,1=B,2=C,3=D)</label><input type="number" class="form-input" id="correct" placeholder="0"/></div>
-              <div><label class="form-label">Time (minutes)</label><input type="number" class="form-input" id="timeLimit" placeholder="5"/></div>
+              <div><label class="form-label">Correct (0=A 1=B 2=C 3=D)</label><input type="number" class="form-input" id="correct" placeholder="0" min="0" max="3"/></div>
+              <div><label class="form-label">Time (minutes)</label><input type="number" class="form-input" id="timeLimit" placeholder="5" min="1"/></div>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <button class="btn-save" onclick="addQuestion()">➕ Save Question</button>
@@ -503,40 +554,44 @@
             </div>
           </div>
 
-          <!-- UPLOAD PDF/WORD PANEL -->
+          <!-- TAB 3: UPLOAD PDF/WORD -->
           <div id="panelUpload" style="display:none;">
             <div id="apiKeyWarning" style="display:none;background:#fef2f2;border:2px solid #ef4444;border-radius:12px;padding:12px;margin-bottom:12px;">
-            <b style="color:#dc2626;">&#9888;&#65039; API Key Required!</b><br>
-            <span style="font-size:12px;color:#7f1d1d;">Click <b>Set Anthropic API Key</b> button above first.<br>Get a free key at: <a href="https://console.anthropic.com" target="_blank" style="color:#1d4ed8;font-weight:700;">console.anthropic.com</a></span>
-          </div>
-          <label class="form-label">Select Test to add questions to</label>
-            <select class="form-input" id="uploadCoursePick"><option value="">Select test</option></select>
+              <b style="color:#dc2626;">⚠️ API Key Required!</b><br>
+              <span style="font-size:12px;color:#7f1d1d;">Click <b>Set Anthropic API Key</b> button above first.</span>
+            </div>
+            <label class="form-label">Class</label>
+            <select class="form-input" id="upClass" onchange="loadUpSubjects()">
+              <option value="">— Select Class —</option>
+              <option>Balvatika</option><option>Class 1</option><option>Class 2</option>
+              <option>Class 3</option><option>Class 4</option><option>Class 5</option>
+              <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+            </select>
+            <label class="form-label">Subject</label>
+            <select class="form-input" id="upSubject" onchange="loadUpChapters()"><option value="">— Select Subject —</option></select>
+            <label class="form-label">Chapter</label>
+            <select class="form-input" id="upChapter"><option value="">— Select Chapter —</option></select>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
-              <!-- PDF -->
               <div class="upload-zone" onclick="g('pdfFileInput').click()">
                 <input type="file" id="pdfFileInput" accept=".pdf" onchange="handleFileUpload(this,'pdf')"/>
                 <div class="upload-zone-icon">📕</div>
                 <div class="upload-zone-title">Upload PDF</div>
-                <div class="upload-zone-sub">Click to choose PDF file</div>
+                <div class="upload-zone-sub">Click to choose PDF</div>
               </div>
-              <!-- Word -->
               <div class="upload-zone" onclick="g('wordFileInput').click()">
                 <input type="file" id="wordFileInput" accept=".docx,.doc" onchange="handleFileUpload(this,'word')"/>
                 <div class="upload-zone-icon">📘</div>
                 <div class="upload-zone-title">Upload Word</div>
-                <div class="upload-zone-sub">Click to choose .docx file</div>
+                <div class="upload-zone-sub">Click to choose .docx</div>
               </div>
             </div>
             <div class="upload-progress" id="uploadProgress">
-              <div style="font-size:13px;font-weight:700;color:#4f46e5;" id="uploadStatus">🤖 AI is reading your file...</div>
+              <div style="font-size:13px;font-weight:700;color:#4f46e5;" id="uploadStatus">🤖 Reading file...</div>
               <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadFill"></div></div>
             </div>
             <div class="upload-result" id="uploadResult"></div>
-            <div style="margin-top:12px;padding:12px;background:#fef3c7;border-radius:12px;border:1.5px solid #fcd34d;">
-              <div style="font-size:12px;font-weight:700;color:#92400e;">📋 File Format Guide:</div>
-              <div style="font-size:11px;color:#78350f;margin-top:4px;line-height:1.6;">Write questions in this format:<br/>
-              <b>1. Question text?</b><br/>A) Option A &nbsp; B) Option B &nbsp; C) Option C &nbsp; D) Option D<br/>Answer: A<br/><br/>
-              The AI will automatically convert them into test questions!</div>
+            <div style="margin-top:10px;padding:10px 12px;background:#fef3c7;border-radius:10px;border:1.5px solid #fcd34d;font-size:11px;color:#78350f;">
+              <b>Format:</b> 1. Question? &nbsp; A) ... B) ... C) ... D) ... &nbsp; Answer: A
             </div>
           </div>
         </div>
@@ -689,19 +744,158 @@ firebase.initializeApp({
 const auth=firebase.auth(), db=firebase.firestore();
 const ADMINS=["dnyanrui90@gmail.com","pawarjai999@gmail.com"];
 
-// SUBJECTS & TOPICS config — admin can expand this
-const SUBJECTS = {
-  'Balvatika':['English','Hindi','Maths','EVS','General Knowledge'],
-  'Class 1':['English','Hindi','Mathematics','EVS','General Knowledge'],
-  'Class 2':['English','Hindi','Mathematics','EVS','General Knowledge'],
-  'Class 3':['English','Hindi','Mathematics','Science','Social Studies','Computer'],
-  'Class 4':['English','Hindi','Mathematics','Science','Social Studies','Computer'],
-  'Class 5':['English','Hindi','Mathematics','Science','Social Studies','Computer'],
-  'Class 6':['English','Hindi','Mathematics','Science','Social Studies','Computer','Sanskrit'],
-  'Class 7':['English','Hindi','Mathematics','Science','Social Studies','Computer','Sanskrit'],
-  'Class 8':['English','Hindi','Mathematics','Science','Social Studies','Computer','Sanskrit'],
-};
-const SUBJECT_ICONS={'English':'📖','Hindi':'🇮🇳','Mathematics':'🧮','Maths':'🧮','Science':'🔬','Social Studies':'🌍','Computer':'💻','EVS':'🌿','Sanskrit':'📜','General Knowledge':'🌐'};
+// ── HIERARCHY HELPERS (Firestore: hierarchy/{class}/subjects/{sub}/chapters/{ch}) ──
+function hierPath(cls){return db.collection('hierarchy').doc(cls);}
+function subCol(cls){return hierPath(cls).collection('subjects');}
+function chCol(cls,sub){return subCol(cls).doc(sub).collection('chapters');}
+
+// ── ADMIN HIERARCHY MANAGER ──
+let hierCurrentClass='',hierCurrentSubject='';
+
+function loadHierClass(){
+  const cls=g('hierClassSel').value;
+  if(!cls){g('hierSubjectBox').style.display='none';g('hierChapterBox').style.display='none';return;}
+  hierCurrentClass=cls;hierCurrentSubject='';
+  g('hierSubjectClass').textContent='('+cls+')';
+  g('hierSubjectBox').style.display='block';
+  g('hierChapterBox').style.display='none';
+  loadSubjectList();
+}
+function loadSubjectList(){
+  const div=g('hierSubjectList');
+  div.innerHTML='<div style="font-size:12px;color:#9ca3af;padding:6px;">Loading...</div>';
+  subCol(hierCurrentClass).orderBy('order','asc').get().then(snap=>{
+    if(snap.empty){div.innerHTML='<div style="font-size:12px;color:#9ca3af;padding:6px;">No subjects yet. Add one below.</div>';return;}
+    let html='';
+    snap.forEach(doc=>{
+      const name=doc.id;
+      html+=`<div class="hier-row">
+        <span class="hier-row-name">📚 ${esc(name)}</span>
+        <div class="hier-row-actions">
+          <button class="btn-hier-add" onclick="openChapterManager('${escQ(name)}')">📂 Chapters</button>
+          <button class="btn-hier-edit" onclick="editSubject('${escQ(name)}')">✏️</button>
+          <button class="btn-hier-del" onclick="deleteSubject('${escQ(name)}')">🗑️</button>
+        </div>
+      </div>`;
+    });
+    div.innerHTML=html;
+  }).catch(e=>{div.innerHTML='<div style="font-size:12px;color:#dc2626;">'+esc(e.message)+'</div>';});
+}
+async function addSubject(){
+  const name=(g('newSubjectName').value||'').trim();
+  if(!name)return alert('Enter subject name');
+  if(!hierCurrentClass)return alert('Select a class first');
+  const snap=await subCol(hierCurrentClass).get();
+  await subCol(hierCurrentClass).doc(name).set({order:snap.size,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  g('newSubjectName').value='';
+  toast('✅ Subject added!');loadSubjectList();refreshAllSelectors();
+}
+async function editSubject(oldName){
+  const newName=prompt('Rename subject:',oldName);
+  if(!newName||newName===oldName)return;
+  // Copy all chapters to new name
+  const cSnap=await chCol(hierCurrentClass,oldName).get();
+  const b=db.batch();
+  cSnap.forEach(doc=>b.set(chCol(hierCurrentClass,newName).doc(doc.id),doc.data()));
+  const oldData=(await subCol(hierCurrentClass).doc(oldName).get()).data();
+  b.set(subCol(hierCurrentClass).doc(newName),oldData||{});
+  b.delete(subCol(hierCurrentClass).doc(oldName));
+  // Also rename questions with this subject
+  const qSnap=await db.collectionGroup('questions').where('subject','==',oldName).get().catch(()=>({empty:true,forEach:()=>{}}));
+  qSnap.forEach(doc=>b.update(doc.ref,{subject:newName}));
+  await b.commit();
+  toast('✅ Renamed!');loadSubjectList();refreshAllSelectors();
+}
+async function deleteSubject(name){
+  if(!confirm('Delete subject "'+name+'" and ALL its chapters?'))return;
+  const cSnap=await chCol(hierCurrentClass,name).get();
+  const b=db.batch();
+  cSnap.forEach(doc=>b.delete(doc.ref));
+  b.delete(subCol(hierCurrentClass).doc(name));
+  await b.commit();
+  toast('🗑️ Subject deleted!');loadSubjectList();refreshAllSelectors();
+}
+function openChapterManager(subName){
+  hierCurrentSubject=subName;
+  g('hierChapterSubject').textContent=subName+' ('+hierCurrentClass+')';
+  g('hierChapterBox').style.display='block';
+  loadChapterList();
+}
+function backToSubjects(){
+  hierCurrentSubject='';
+  g('hierChapterBox').style.display='none';
+}
+function loadChapterList(){
+  const div=g('hierChapterList');
+  div.innerHTML='<div style="font-size:12px;color:#9ca3af;padding:6px;">Loading...</div>';
+  chCol(hierCurrentClass,hierCurrentSubject).orderBy('order','asc').get().then(snap=>{
+    if(snap.empty){div.innerHTML='<div style="font-size:12px;color:#9ca3af;padding:6px;">No chapters yet.</div>';return;}
+    let html='';
+    snap.forEach(doc=>{
+      const name=doc.id;
+      html+=`<div class="hier-row">
+        <span class="hier-row-name">📄 ${esc(name)}</span>
+        <div class="hier-row-actions">
+          <button class="btn-hier-edit" onclick="editChapter('${escQ(name)}')">✏️</button>
+          <button class="btn-hier-del" onclick="deleteChapter('${escQ(name)}')">🗑️</button>
+        </div>
+      </div>`;
+    });
+    div.innerHTML=html;
+  }).catch(e=>{div.innerHTML='<div style="font-size:12px;color:#dc2626;">'+esc(e.message)+'</div>';});
+}
+async function addChapter(){
+  const name=(g('newChapterName').value||'').trim();
+  if(!name)return alert('Enter chapter name');
+  if(!hierCurrentClass||!hierCurrentSubject)return alert('Select class and subject first');
+  const snap=await chCol(hierCurrentClass,hierCurrentSubject).get();
+  await chCol(hierCurrentClass,hierCurrentSubject).doc(name).set({order:snap.size,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  g('newChapterName').value='';
+  toast('✅ Chapter added!');loadChapterList();refreshAllSelectors();
+}
+async function editChapter(oldName){
+  const newName=prompt('Rename chapter:',oldName);
+  if(!newName||newName===oldName)return;
+  const oldData=(await chCol(hierCurrentClass,hierCurrentSubject).doc(oldName).get()).data();
+  const b=db.batch();
+  b.set(chCol(hierCurrentClass,hierCurrentSubject).doc(newName),oldData||{});
+  b.delete(chCol(hierCurrentClass,hierCurrentSubject).doc(oldName));
+  await b.commit();
+  toast('✅ Renamed!');loadChapterList();refreshAllSelectors();
+}
+async function deleteChapter(name){
+  if(!confirm('Delete chapter "'+name+'"?'))return;
+  await chCol(hierCurrentClass,hierCurrentSubject).doc(name).delete();
+  toast('🗑️ Deleted!');loadChapterList();refreshAllSelectors();
+}
+
+// ── SELECTORS: load subjects/chapters for Add Question & Upload tabs ──
+function refreshAllSelectors(){
+  const qc=g('qClass')?.value;const uc=g('upClass')?.value;
+  if(qc){loadQSubjects();}
+  if(uc){loadUpSubjects();}
+  // Also refresh folder view if open
+}
+async function loadSubjectsForClass(cls,selId){
+  const sel=g(selId);if(!sel)return;
+  sel.innerHTML='<option value="">— Select Subject —</option>';
+  try{
+    const snap=await subCol(cls).orderBy('order','asc').get();
+    snap.forEach(doc=>{const o=document.createElement('option');o.value=doc.id;o.textContent=doc.id;sel.appendChild(o);});
+  }catch(e){console.log(e);}
+}
+async function loadChaptersForSubject(cls,sub,selId){
+  const sel=g(selId);if(!sel)return;
+  sel.innerHTML='<option value="">— Select Chapter —</option>';
+  try{
+    const snap=await chCol(cls,sub).orderBy('order','asc').get();
+    snap.forEach(doc=>{const o=document.createElement('option');o.value=doc.id;o.textContent=doc.id;sel.appendChild(o);});
+  }catch(e){console.log(e);}
+}
+function loadQSubjects(){const cls=g('qClass')?.value;if(cls)loadSubjectsForClass(cls,'qSubject');g('qChapter').innerHTML='<option value="">— Select Chapter —</option>';}
+function loadQChapters(){const cls=g('qClass')?.value,sub=g('qSubject')?.value;if(cls&&sub)loadChaptersForSubject(cls,sub,'qChapter');}
+function loadUpSubjects(){const cls=g('upClass')?.value;if(cls)loadSubjectsForClass(cls,'upSubject');g('upChapter').innerHTML='<option value="">— Select Chapter —</option>';}
+function loadUpChapters(){const cls=g('upClass')?.value,sub=g('upSubject')?.value;if(cls&&sub)loadChaptersForSubject(cls,sub,'upChapter');}
 
 function g(id){return document.getElementById(id);}
 function toast(m,ok=true){const e=g("toast");e.textContent=m;e.style.background=ok?"#1a1f36":"#dc2626";e.style.display="block";setTimeout(()=>e.style.display="none",2800);}
@@ -750,18 +944,24 @@ auth.onAuthStateChanged(user=>{
 
 // ── ADMIN TABS ──
 function switchAdminTab(tab){
-  g("tabManual").classList.toggle("active",tab==="manual");
-  g("tabUpload").classList.toggle("active",tab==="upload");
-  g("panelManual").style.display=tab==="manual"?"block":"none";
-  g("panelUpload").style.display=tab==="upload"?"block":"none";
-  if(tab==="upload"){refreshUploadCoursePick();checkApiKeyWarning();}
-  if(tab==="manual") refreshCoursePick();
+  const tabs=['Hier','Manual','Upload'];
+  tabs.forEach(t=>{
+    const btn=g('tab'+t);const panel=g('panel'+t);
+    if(btn)btn.classList.toggle('active',t.toLowerCase()===tab);
+    if(panel)panel.style.display=t.toLowerCase()===tab?'block':'none';
+  });
+  if(tab==='upload'){checkApiKeyWarning();}
 }
 
 // ── PDF/WORD UPLOAD & AI CONVERSION ──
 function handleFileUpload(input, type){
-  const course=(g("uploadCoursePick").value||"").trim();
-  if(!course){alert("Please select a test first!");input.value="";return;}
+  const cls=(g("upClass")?.value||"").trim();
+  const subject=(g("upSubject")?.value||"").trim();
+  const chapter=(g("upChapter")?.value||"").trim();
+  if(!cls){alert("Please select a Class first!");input.value="";return;}
+  if(!subject){alert("Please select a Subject first!");input.value="";return;}
+  if(!chapter){alert("Please select a Chapter first!");input.value="";return;}
+  const course=cls+"__"+subject+"__"+chapter;
   const file=input.files[0];if(!file)return;
 
   const prog=g("uploadProgress"),fill=g("uploadFill"),status=g("uploadStatus"),result=g("uploadResult");
@@ -899,6 +1099,9 @@ ${truncated}
         result.innerHTML=`✅ <b>${questions.length} questions</b> extracted and saved to <b>${esc(course)}</b>! 🎉`;
         result.style.display="block";
         toast("✅ "+questions.length+" questions imported successfully!");
+        // Ensure course doc exists
+        const pts=course.split("__");
+        db.collection("courses").doc(course).set({class:pts[0]||"",subject:pts[1]||"",chapter:pts[2]||"",paid:false,label:(pts[0]||"")+" › "+(pts[1]||"")+" › "+(pts[2]||""),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
         loadManageQuestions();input.value="";
       },400);
     }).catch(err=>showUploadError(result,prog,"Firestore error: "+err.message));
@@ -925,25 +1128,27 @@ function filterCourses(){renderFilteredCourses();}
 function renderFilteredCourses(){
   const div=g('courseList'),search=(g('courseSearch')?.value||'').toLowerCase();
   const isAdm=currentUserRole==='admin';
-  let filtered=allCourseDocs.filter(doc=>{
-    const name=doc.id.toLowerCase();
-    return(activeClass==='all'||name.includes(activeClass.toLowerCase()))&&(!search||name.includes(search));
+  // Group by class: extract unique class names from courseKey "Class 6__Maths__Ch1"
+  const classMap={};
+  allCourseDocs.forEach(doc=>{
+    const parts=doc.id.split("__");
+    const cls=parts.length>=3?parts[0]:doc.id; // class name
+    if(!classMap[cls])classMap[cls]={name:cls,paid:!!doc.data().paid,count:0};
+    classMap[cls].count++;
   });
-  if(!filtered.length){div.innerHTML='<div class="empty"><div class="empty-icon">🔍</div>No tests found.</div>';return;}
-  const emojisL=["📘","📗","📙","📕","🔬","🧮","🌍","🎨","🏛️","⚗️"];
+  let classes=Object.values(classMap).filter(c=>{
+    const n=c.name.toLowerCase();
+    return(activeClass==='all'||n.includes(activeClass.toLowerCase()))&&(!search||n.includes(search));
+  });
+  if(!classes.length){div.innerHTML='<div class="empty"><div class="empty-icon">🔍</div>No classes found.</div>';return;}
+  const emojisL=["📘","📗","📙","📕","📓","📔","📒","📃","🔬","🧮"];
+  const gradients=['#4f46e5,#7c3aed','#10b981,#059669','#f59e0b,#ef4444','#0ea5e9,#6366f1'];
   let html="";
-  filtered.forEach((doc,i)=>{
-    const name=doc.id,paid=!!doc.data().paid;
-    const adminBtns=isAdm?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;width:100%;">
-      <button class="btn-rename" onclick="openRename('${escQ(name)}')">✏️ Rename</button>
-      <button class="btn-add-inside" onclick="openAddInside('${escQ(name)}')">➕ Add Q</button>
-      <button class="btn-del-course" onclick="confirmDeleteCourse('${escQ(name)}')">🗑️ Delete</button>
-    </div>`:'';
+  classes.forEach((c,i)=>{
     html+=`<div class="course-card" style="flex-wrap:wrap;">
-      <div class="course-icon" style="background:linear-gradient(135deg,${['#4f46e5,#7c3aed','#10b981,#059669','#f59e0b,#ef4444','#0ea5e9,#6366f1'][i%4]})">${emojisL[i%emojisL.length]}</div>
-      <div class="course-info" style="flex:1"><b>${esc(name)}</b><span>${paid?"🔒 Premium Test":"✅ Free Test"}</span></div>
-      <div>${paid?'<span class="lock-tag">🔒 Locked</span>':`<button class="btn-go" onclick="openFolder('${escQ(name)}')">GO</button>`}</div>
-      ${adminBtns}
+      <div class="course-icon" style="background:linear-gradient(135deg,${gradients[i%4]})">${emojisL[i%emojisL.length]}</div>
+      <div class="course-info" style="flex:1"><b>${esc(c.name)}</b><span>📚 ${c.count} chapter test(s)</span></div>
+      <div><button class="btn-go" onclick="openFolder('${escQ(c.name)}')">GO</button></div>
     </div>`;
   });
   div.innerHTML=html;
@@ -976,19 +1181,33 @@ function refreshUploadCoursePick(){
     });
   }).catch(err=>{sel.innerHTML='<option value="">Error loading — try again</option>';console.error(err);});
 }
-function clearQuestionForm(){["questionText","opt1","opt2","opt3","opt4","correct","chapterName"].forEach(id=>{const el=g(id);if(el)el.value="";});}
+function clearQuestionForm(){["questionText","opt1","opt2","opt3","opt4","correct","timeLimit"].forEach(id=>{const el=g(id);if(el)el.value="";});}
 function addQuestion(){
-  const course=(g("coursePick").value||"").trim();if(!course)return alert("Select a test first");
+  const cls=(g("qClass")?.value||"").trim();
+  const subject=(g("qSubject")?.value||"").trim();
+  const chapter=(g("qChapter")?.value||"").trim();
+  if(!cls)return alert("Select a Class first");
+  if(!subject)return alert("Select a Subject first");
+  if(!chapter)return alert("Select a Chapter first");
   const q=g("questionText").value.trim(),o1=g("opt1").value.trim(),o2=g("opt2").value.trim(),o3=g("opt3").value.trim(),o4=g("opt4").value.trim();
-  const correct=parseInt(g("correct").value,10),time=parseInt(g("timeLimit").value,10);
-  const chapter=(g("chapterName")?.value||"").trim();
+  const correct=parseInt(g("correct").value,10),time=parseInt(g("timeLimit").value,10)||5;
   if(!q||!o1||!o2||!o3||!o4)return alert("Fill question + all 4 options");
   if(isNaN(correct)||correct<0||correct>3)return alert("Correct must be 0-3");
   if(isNaN(time)||time<=0)return alert("Time must be > 0");
-  const qData={question:q,options:[o1,o2,o3,o4],correct,time,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email||""};
-  if(chapter) qData.topic=chapter;
-  db.collection("courses").doc(course).collection("questions").add(qData)
-    .then(()=>{toast("✅ Question saved!");clearQuestionForm();loadManageQuestions();}).catch(e=>alert(e.message));
+  const courseKey=cls+"__"+subject+"__"+chapter;
+  const qData={question:q,options:[o1,o2,o3,o4],correct,time,
+    class:cls,subject:subject,chapter:chapter,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email||""};
+  db.collection("courses").doc(courseKey).collection("questions").add(qData)
+    .then(()=>{
+      db.collection("courses").doc(courseKey).set({
+        class:cls,subject:subject,chapter:chapter,paid:false,
+        label:cls+" › "+subject+" › "+chapter,
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+      toast("✅ Question saved to "+cls+" › "+subject+" › "+chapter+"!");
+      clearQuestionForm();loadManageQuestions();
+    }).catch(e=>alert(e.message));
 }
 
 // ── MANAGE QUESTIONS WITH EDIT & CHAPTER ──
@@ -1049,104 +1268,122 @@ function saveEdit(){
 }
 
 // ── FOLDER SYSTEM (GO → Subject → Topic → Tests) ──
-let folderState={courseName:"",subject:"",topic:"",history:[]};
+// ── FOLDER NAVIGATION: All Classes → Subject → Chapter → Test ──
+let folderState={cls:"",subject:"",chapter:"",history:[]};
+
 function openFolder(course){
-  folderState={courseName:course,subject:"",topic:"",history:[]};
+  // course may be old-style name or new Class__Sub__Ch key — handle both
+  // We now open the top-level class browser
+  folderState={cls:"",subject:"",chapter:"",history:[]};
   g("folderModal").classList.add("open");
-  renderFolderSubjects();
+  renderFolderClasses();
 }
 function closeFolder(){g("folderModal").classList.remove("open");}
 function folderGoBack(){
   if(folderState.history.length===0){closeFolder();return;}
   const prev=folderState.history.pop();
-  folderState.subject=prev.subject||"";folderState.topic=prev.topic||"";
-  if(!prev.subject){renderFolderSubjects();}
-  else if(!prev.topic){renderFolderTopics(prev.subject);}
-  else{renderFolderTests(prev.subject,prev.topic);}
+  if(prev.level==="classes"){renderFolderClasses();}
+  else if(prev.level==="subjects"){folderState.cls=prev.cls;renderFolderSubjects(prev.cls);}
+  else if(prev.level==="chapters"){folderState.cls=prev.cls;folderState.subject=prev.subject;renderFolderChapters(prev.cls,prev.subject);}
 }
-function renderFolderSubjects(){
-  const course=folderState.courseName;
-  // Find matching class
-  let subjects=["English","Hindi","Mathematics","Science","Social Studies","Computer","General Knowledge"];
-  for(const[cls,subs] of Object.entries(SUBJECTS)){
-    if(course.toLowerCase().includes(cls.toLowerCase())){subjects=subs;break;}
-  }
-  g("folderTitle").textContent="📁 "+course+" — Select Subject";
+
+function renderFolderClasses(){
+  g("folderTitle").textContent="🏫 Select Class";
   g("folderBack").style.display="none";
-  let html='';
-  subjects.forEach(sub=>{
-    const icon=SUBJECT_ICONS[sub]||"📚";
-    html+=`<button class="subject-btn" onclick="folderPickSubject('${escQ(sub)}')">${icon} ${esc(sub)}</button>`;
+  const classes=["Balvatika","Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7","Class 8"];
+  const icons=["🌱","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣"];
+  let html="";
+  classes.forEach((cls,i)=>{
+    html+=`<button class="subject-btn" onclick="folderPickClass('${escQ(cls)}')">${icons[i]} ${esc(cls)}</button>`;
   });
   g("folderContent").innerHTML=html;
 }
-function folderPickSubject(sub){
-  folderState.history.push({subject:"",topic:""});
-  folderState.subject=sub;
-  renderFolderTopics(sub);
+
+function folderPickClass(cls){
+  folderState.history.push({level:"classes"});
+  folderState.cls=cls;
+  renderFolderSubjects(cls);
 }
-function renderFolderTopics(sub){
-  g("folderTitle").textContent="📂 "+sub+" — Select Topic";
+
+async function renderFolderSubjects(cls){
+  g("folderTitle").textContent="📚 "+cls+" — Select Subject";
   g("folderBack").style.display="";
-  // Load topics from Firestore or show generic ones
-  const course=folderState.courseName;
-  db.collection("courses").doc(course).collection("questions").get().then(snap=>{
-    // Collect unique topics from questions, or use generic list
-    const topicsSet=new Set();
-    snap.forEach(doc=>{const t=doc.data().topic;if(t)topicsSet.add(t);});
-    let topics=[...topicsSet];
-    if(!topics.length){
-      // Generic topics
-      topics=["Chapter 1","Chapter 2","Chapter 3","Chapter 4","Chapter 5","Chapter 6","Full Syllabus","Practice Test"];
+  g("folderContent").innerHTML='<div style="padding:20px;text-align:center;color:#9ca3af;">Loading...</div>';
+  try{
+    const snap=await subCol(cls).orderBy("order","asc").get();
+    if(snap.empty){
+      g("folderContent").innerHTML='<div style="padding:20px;text-align:center;color:#9ca3af;">No subjects added yet.<br><small>Admin can add subjects in the Manage Structure tab.</small></div>';
+      return;
     }
-    let html='';
-    topics.forEach((t,i)=>{
-      const icons=["📗","📘","📙","📕","📓","📔","📒","📃"];
-      html+=`<button class="topic-btn" onclick="folderPickTopic('${escQ(sub)}','${escQ(t)}')">${icons[i%icons.length]} ${esc(t)}</button>`;
+    let html="";
+    snap.forEach(doc=>{
+      const sub=doc.id;
+      const icon=SUBJECT_ICONS[sub]||"📚";
+      html+=`<button class="subject-btn" onclick="folderPickSubject('${escQ(cls)}','${escQ(sub)}')">${icon} ${esc(sub)}</button>`;
     });
     g("folderContent").innerHTML=html;
-  }).catch(()=>{
-    const topics=["Chapter 1","Chapter 2","Chapter 3","Chapter 4","Full Syllabus","Practice Test"];
-    let html='';
-    topics.forEach((t,i)=>{
-      const icons=["📗","📘","📙","📕","📓","📔"];
-      html+=`<button class="topic-btn" onclick="folderPickTopic('${escQ(sub)}','${escQ(t)}')">${icons[i%icons.length]} ${esc(t)}</button>`;
-    });
-    g("folderContent").innerHTML=html;
-  });
+  }catch(e){g("folderContent").innerHTML='<div style="padding:16px;color:#dc2626;">Error: '+esc(e.message)+'</div>';}
 }
-function folderPickTopic(sub,topic){
-  folderState.history.push({subject:sub,topic:""});
-  folderState.topic=topic;
-  renderFolderTests(sub,topic);
+
+function folderPickSubject(cls,sub){
+  folderState.history.push({level:"subjects",cls});
+  folderState.subject=sub;
+  renderFolderChapters(cls,sub);
 }
-function renderFolderTests(sub,topic){
-  g("folderTitle").textContent="📝 "+sub+" › "+topic+" — Tests";
+
+async function renderFolderChapters(cls,sub){
+  g("folderTitle").textContent="📂 "+sub+" — Select Chapter";
   g("folderBack").style.display="";
-  const course=folderState.courseName;
-  // Show the course as a test + any topic-specific ones
-  let html=`<div style="margin-bottom:12px;padding:10px;background:#f0f4ff;border-radius:10px;font-size:12px;color:#6b7280;">
-    Showing tests for: <b>${esc(course)}</b> › <b>${esc(sub)}</b> › <b>${esc(topic)}</b>
-  </div>`;
-  // Main test
-  html+=`<button class="test-folder-btn" onclick="closeFolder();startTest('${escQ(course)}')">
-    <span class="tf-icon">📝</span>
-    <div style="flex:1;text-align:left;"><b>${esc(course)}</b><div style="font-size:11px;color:#6b7280;">${esc(sub)} - ${esc(topic)}</div></div>
-    <span class="tf-go">Start ▶</span>
-  </button>`;
-  // Also check if there are other tests matching subject+class
-  const classMatch=folderState.courseName;
-  allCourseDocs.forEach(doc=>{
-    if(doc.id!==classMatch&&doc.id.toLowerCase().includes(sub.toLowerCase())){
-      html+=`<button class="test-folder-btn" onclick="closeFolder();startTest('${escQ(doc.id)}')">
-        <span class="tf-icon">📋</span>
-        <div style="flex:1;text-align:left;"><b>${esc(doc.id)}</b><div style="font-size:11px;color:#6b7280;">${esc(sub)}</div></div>
+  g("folderContent").innerHTML='<div style="padding:20px;text-align:center;color:#9ca3af;">Loading...</div>';
+  try{
+    const snap=await chCol(cls,sub).orderBy("order","asc").get();
+    if(snap.empty){
+      g("folderContent").innerHTML='<div style="padding:20px;text-align:center;color:#9ca3af;">No chapters added yet.<br><small>Admin can add chapters in the Manage Structure tab.</small></div>';
+      return;
+    }
+    const icons=["📗","📘","📙","📕","📓","📔","📒","📃"];
+    let html="";
+    let i=0;
+    snap.forEach(doc=>{
+      const ch=doc.id;
+      html+=`<button class="topic-btn" onclick="folderPickChapter('${escQ(cls)}','${escQ(sub)}','${escQ(ch)}')">${icons[i%icons.length]} ${esc(ch)}</button>`;
+      i++;
+    });
+    g("folderContent").innerHTML=html;
+  }catch(e){g("folderContent").innerHTML='<div style="padding:16px;color:#dc2626;">Error: '+esc(e.message)+'</div>';}
+}
+
+function folderPickChapter(cls,sub,ch){
+  folderState.history.push({level:"chapters",cls,subject:sub});
+  folderState.chapter=ch;
+  renderFolderTests(cls,sub,ch);
+}
+
+async function renderFolderTests(cls,sub,ch){
+  g("folderTitle").textContent="📝 "+ch;
+  g("folderBack").style.display="";
+  g("folderContent").innerHTML='<div style="padding:20px;text-align:center;color:#9ca3af;">Loading tests...</div>';
+  const courseKey=cls+"__"+sub+"__"+ch;
+  // Check if this course key exists and has questions
+  try{
+    const qSnap=await db.collection("courses").doc(courseKey).collection("questions").limit(1).get();
+    let html=`<div style="margin-bottom:10px;padding:8px 12px;background:#f0f4ff;border-radius:10px;font-size:12px;color:#6b7280;">
+      📍 ${esc(cls)} › ${esc(sub)} › ${esc(ch)}
+    </div>`;
+    if(qSnap.empty){
+      html+='<div style="padding:16px;text-align:center;color:#9ca3af;">No questions in this chapter yet.<br><small>Admin can add questions via Add Question or Upload PDF/Word.</small></div>';
+    } else {
+      html+=`<button class="test-folder-btn" onclick="closeFolder();startTest('${escQ(courseKey)}')">
+        <span class="tf-icon">📝</span>
+        <div style="flex:1;text-align:left;"><b>${esc(ch)}</b><div style="font-size:11px;color:#6b7280;">${esc(sub)} · ${esc(cls)}</div></div>
         <span class="tf-go">Start ▶</span>
       </button>`;
     }
-  });
-  g("folderContent").innerHTML=html;
+    g("folderContent").innerHTML=html;
+  }catch(e){g("folderContent").innerHTML='<div style="padding:16px;color:#dc2626;">Error: '+esc(e.message)+'</div>';}
 }
+// Legacy - keep for backward compatibility
+function folderPickSubjectOld(sub){folderState.history.push({level:"classes"});folderState.subject=sub;}
 
 // ── TEST ENGINE ──
 let currentCourse="",currentQuestions=[],timeLeft=0,timerInt=null;
