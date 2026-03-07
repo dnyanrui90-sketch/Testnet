@@ -798,7 +798,7 @@ async function loadAllClasses(){
 function renderClassChips(){
   const div=g('classFilter');
   if(!div)return;
-  let html='<button class="class-chip active" onclick="setClass('all',this)">All</button>';
+  let html='<button class="class-chip active" onclick="setClass(\'all\',this)">All</button>';
   allClassNames.forEach(cls=>{
     html+=`<button class="class-chip" onclick="setClass('${escQ(cls)}',this)">${esc(cls)}</button>`;
   });
