@@ -1659,7 +1659,14 @@ ${truncated}
       setTimeout(()=>{
         prog.style.display="none";
         result.style.background="#d1fae5";result.style.borderColor="#10b981";result.style.color="#065f46";
-        result.innerHTML=`✅ <b>${questions.length} questions</b> extracted and saved to <b>${esc(course)}</b>! 🎉`;
+        result.innerHTML=`
+          <div style="margin-bottom:8px;">✅ <b>${questions.length} questions</b> extracted and saved to <b>${esc(course)}</b>! 🎉</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;padding-top:8px;border-top:1.5px solid #6ee7b7;">
+            <span style="font-size:12px;font-weight:700;color:#065f46;">⏱️ Set time limit for this test:</span>
+            <input type="number" id="uploadTimeInput" min="1" max="300" placeholder="minutes" style="width:90px;padding:6px 10px;border:2px solid #6ee7b7;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;outline:none;color:#065f46;background:#f0fdf4;"/>
+            <button onclick="saveUploadTime('${escQ(course)}')" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:10px;padding:7px 16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;">✅ Save Time</button>
+            <button onclick="saveUploadTime('${escQ(course)}',true)" style="background:#f1f5f9;color:#475569;border:none;border-radius:10px;padding:7px 14px;font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;cursor:pointer;">Skip</button>
+          </div>`;
         result.style.display="block";
         toast("✅ "+questions.length+" questions imported successfully!");
         // Ensure course doc exists
@@ -2044,6 +2051,21 @@ function startTimer(s){stopTimer();timeLeft=s;updateTimer();timerInt=setInterval
 function stopTimer(){if(timerInt){clearInterval(timerInt);timerInt=null;}}
 
 // ── SET TEST TIME LIMIT ──
+function saveUploadTime(course, skip=false){
+  const mins = skip ? 0 : (parseInt(g('uploadTimeInput')?.value)||0);
+  const resultDiv = g('uploadResult');
+  db.collection('courses').doc(course).update({totalTimeMin: mins})
+    .then(()=>{
+      if(resultDiv){
+        resultDiv.innerHTML=mins>0
+          ? `✅ Questions saved! ⏱️ Time limit set to <b>${mins} minutes</b>.`
+          : `✅ Questions saved! No time limit set (per-question mode).`;
+      }
+      if(mins>0) toast('⏱️ Time limit set to '+mins+' min!');
+      loadAdminCourseList();
+    })
+    .catch(e=>alert('Error saving time: '+e.message));
+}
 function openSetTime(course, currentMin){
   g('setTimeCourse').value=course;
   g('setTimeCourseLabel').textContent=fmtCourse(course)+' › '+fmtCourseSub(course);
