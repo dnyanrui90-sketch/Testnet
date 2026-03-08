@@ -27,7 +27,7 @@
 
     /* TOPBAR */
     .topbar{background:#fff;box-shadow:0 2px 12px rgba(79,70,229,0.08);position:sticky;top:0;z-index:200;}
-    .topbar-inner{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .topbar-inner{max-width:1200px;margin:0 auto;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;overflow:hidden;}
     .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
     .logo-text{font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
     .logo-tag{font-size:10px;background:#eef2ff;color:#4f46e5;border-radius:6px;padding:2px 7px;font-weight:700;}
@@ -35,7 +35,7 @@
     .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#ec4899);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:800;}
 
     /* WRAP */
-    .wrap{max-width:1200px;margin:0 auto;padding:24px 20px 80px;}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px 16px 80px;overflow-x:hidden;}
 
     /* HERO */
     .hero{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#ec4899 100%);border-radius:24px;padding:40px;color:white;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;overflow:hidden;position:relative;}
@@ -72,11 +72,11 @@
     .admin-tab.active{background:white;color:#4f46e5;box-shadow:0 2px 8px rgba(79,70,229,0.15);}
 
     /* COURSE CARDS — GO BUTTON */
-    .course-card{border-radius:14px;border:2px solid #e0e7ff;background:linear-gradient(135deg,#f5f3ff,#faf5ff);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:10px;transition:box-shadow .15s,transform .15s;flex-wrap:wrap;}
+    .course-card{border-radius:14px;border:2px solid #e0e7ff;background:linear-gradient(135deg,#f5f3ff,#faf5ff);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:10px;transition:box-shadow .15s,transform .15s;width:100%;box-sizing:border-box;overflow:hidden;}
     .course-card:hover{box-shadow:0 4px 20px rgba(79,70,229,0.12);transform:translateY(-1px);}
     .course-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-    .course-info{flex:1;min-width:0;}
-    .course-info b{font-size:15px;font-weight:800;display:block;}
+    .course-info{flex:1;min-width:0;overflow:hidden;}
+    .course-info b{font-size:15px;font-weight:800;display:block;white-space:normal;word-break:break-word;line-height:1.3;}
     .btn-go{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:none;border-radius:12px;padding:10px 20px;font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 3px 10px rgba(79,70,229,0.35);white-space:nowrap;letter-spacing:1px;transition:transform .1s,box-shadow .1s;}
     .btn-go:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(79,70,229,0.45);}
     .lock-tag{background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:999px;padding:6px 12px;font-size:11px;font-weight:800;white-space:nowrap;}
@@ -300,23 +300,94 @@
 
     /* MOBILE */
     @media(max-width:900px){
+      /* Layout */
       .app-grid{grid-template-columns:1fr;}
-      .hero{padding:20px 16px;flex-direction:column;gap:16px;}
+      .wrap{padding:10px 10px 90px;overflow-x:hidden;}
+      .card{padding:12px;overflow:hidden;}
+      
+      /* Hero / Login */
+      .hero{padding:18px 14px;flex-direction:column;gap:14px;}
       .hero h1{font-size:22px;}
-      .login-box{width:100%;max-width:100%;padding:18px;}
-      .wrap{padding:14px 12px 80px;}
-      .card{padding:14px;}
+      .hero-left p{font-size:13px;}
+      .features{gap:6px;}
+      .feat{font-size:11px;padding:4px 10px;}
+      .login-box{width:100%;max-width:100%;padding:16px;min-width:unset;}
+      
+      /* Topbar */
+      .topbar-inner{padding:8px 10px;}
+      .logo-text{font-size:18px;}
+      .user-pill{padding:5px 10px 5px 7px;font-size:11px;}
+      .user-pill span:last-child{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+      
+      /* Course cards */
+      .course-card{padding:10px 12px;gap:8px;}
+      .course-icon{width:38px;height:38px;font-size:17px;}
+      .course-info b{font-size:13px;}
+      .btn-go{padding:7px 12px;font-size:12px;}
+      
+      /* Class chips */
+      .class-scroll{padding-bottom:4px;margin-bottom:10px;}
+      .class-chip{font-size:11px;padding:5px 12px;}
+      
+      /* Test UI */
+      .test-header{gap:8px;}
+      .timer-box{font-size:17px;padding:7px 12px;}
+      .qbox{padding:12px;}
+      .opt{padding:9px 12px;font-size:13px;}
+      .qnav-btn{width:30px;height:30px;font-size:11px;}
+      .qnav-stat b{font-size:16px;}
+      .test-btn-row{gap:8px;}
+      .btn-skip{padding:9px 14px;font-size:13px;}
+      .btn-savenext{padding:9px 14px;font-size:13px;}
+      .btn-submit{padding:10px 18px;font-size:13px;}
+      
+      /* Admin panel */
+      .admin-tabs{flex-wrap:wrap;gap:3px;}
+      .admin-tab{font-size:11px;padding:7px 6px;flex:unset;}
       .form-row{grid-template-columns:1fr;}
-      .chat-box{width:calc(100vw - 24px);right:12px;bottom:80px;}
-      .folder-box{max-height:92vh;}
+      .hier-add-row{flex-direction:column;}
+      .course-manage-row{flex-wrap:wrap;gap:8px;}
+      .cm-actions{flex-wrap:wrap;gap:4px;width:100%;}
+      
+      /* Folder modal */
+      .folder-box{max-height:92vh;padding:16px;}
+      .folder-title{font-size:17px;}
+      
+      /* Modals */
+      .modal-box{padding:16px;}
+      .rename-box{padding:16px;}
+      .add-inside-box{padding:16px;}
+      
+      /* Chatbot */
+      .chat-box{width:calc(100vw - 20px);right:10px;bottom:82px;}
+      .chat-fab{width:48px;height:48px;font-size:21px;bottom:20px;right:16px;}
+      
+      /* Results */
       .result-score{font-size:32px;}
+      .result-banner{padding:14px;}
+      
+      /* Leaderboard */
+      .lb-name{font-size:12px;}
+      .lb-score{font-size:12px;}
+      
+      /* Profile */
+      .profile-card{padding:14px;}
+      .profile-name{font-size:16px;}
     }
-    @media(max-width:400px){
+    @media(max-width:480px){
       .hero h1{font-size:20px;}
-      .wrap{padding:10px 10px 80px;}
+      .wrap{padding:8px 8px 90px;}
       .test-btn-row{flex-direction:column;align-items:stretch;}
       .test-btn-row>div{justify-content:stretch;}
       .test-btn-row>div button{flex:1;text-align:center;}
+      .qnav-grid{gap:4px;}
+      .qnav-btn{width:28px;height:28px;font-size:10px;}
+      .qnav-stats{gap:5px;}
+      .qnav-stat{padding:5px 6px;}
+      .qnav-stat b{font-size:14px;}
+      .admin-tab{font-size:10px;padding:6px 5px;}
+      .course-manage-row .cm-name{font-size:12px;}
+      .hier-row-name{font-size:12px;}
     }
 
     /* MANAGE COURSE ROWS (admin) */
@@ -1637,10 +1708,11 @@ function renderFilteredCourses(){
   const gradients=['#4f46e5,#7c3aed','#10b981,#059669','#f59e0b,#ef4444','#0ea5e9,#6366f1'];
   let html="";
   classes.forEach((c,i)=>{
-    html+=`<div class="course-card" style="flex-wrap:wrap;">
+    const displayName=toTitleCase(c.name);
+    html+=`<div class="course-card">
       <div class="course-icon" style="background:linear-gradient(135deg,${gradients[i%4]})">${emojisL[i%emojisL.length]}</div>
-      <div class="course-info" style="flex:1"><b>${esc(c.name)}</b><span>📚 ${c.count} chapter test(s)</span></div>
-      <div><button class="btn-go" onclick="openFolder('${escQ(c.name)}')">GO</button></div>
+      <div class="course-info"><b style="word-break:break-word;white-space:normal;">${esc(displayName)}</b><span>📚 ${c.count} chapter test(s)</span></div>
+      <div style="flex-shrink:0;"><button class="btn-go" onclick="openFolder('${escQ(c.name)}')">GO</button></div>
     </div>`;
   });
   div.innerHTML=html;
@@ -1886,15 +1958,22 @@ function folderPickSubjectOld(sub){folderState.history.push({level:"classes"});f
 let currentCourse="",currentCourseData={},currentQuestions=[],timeLeft=0,timerInt=null;
 let currentUserRole='student';
 let currentQIndex=0,qAnswers=[],qStatus=[];
+function toTitleCase(str){
+  if(!str)return str;
+  // Keep short words lowercase, capitalize main words
+  const small=new Set(['a','an','the','and','but','or','for','nor','on','at','to','by','in','of','up','as','is']);
+  return str.toLowerCase().replace(/[^\s-]+/g,(w,i)=>
+    (i===0||!small.has(w))?w.charAt(0).toUpperCase()+w.slice(1):w
+  );
+}
 function fmtCourse(course){
-  // "Class__Subject__Chapter" → show just Chapter nicely
   const pts=course.split("__");
-  if(pts.length>=3) return pts.slice(2).join(" – ");
-  return course;
+  if(pts.length>=3) return toTitleCase(pts.slice(2).join(" – "));
+  return toTitleCase(course);
 }
 function fmtCourseSub(course){
   const pts=course.split("__");
-  if(pts.length>=2) return pts[0]+" › "+pts[1];
+  if(pts.length>=2) return toTitleCase(pts[0])+" › "+toTitleCase(pts[1]);
   return "";
 }
 function startTest(course){
