@@ -32,7 +32,7 @@
       --topbar-bg:#16162a;--topbar-shadow:0 2px 12px rgba(0,0,0,0.3);
       --chip-bg:#252540;--chip-border:#3d3d6b;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
     html,body{overflow-x:hidden;max-width:100%;width:100%;}
     body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
 
@@ -65,7 +65,7 @@
     .features{display:flex;flex-wrap:wrap;gap:8px;}
     .feat{background:rgba(255,255,255,0.18);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.25);border-radius:999px;padding:5px 13px;font-size:12px;font-weight:700;}
     .login-box{background:white;border-radius:20px;padding:20px;min-width:0;max-width:100%;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.15);position:relative;z-index:10;}
-    .login-box h3{font-family:'Baloo 2',cursive;font-size:20px;color:var(--text);margin-bottom:4px;}
+    .login-box h3{font-family:'Baloo 2',cursive;font-size:20px;color:#1a1f36;margin-bottom:4px;}
     .login-box p{font-size:12px;color:var(--muted);margin-bottom:16px;}
     .btn-google{width:100%;padding:13px;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s,box-shadow .1s;margin-bottom:10px;}
     .btn-student{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;box-shadow:0 4px 14px rgba(79,70,229,0.35);}
@@ -98,7 +98,7 @@
     .course-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
     .course-info{flex:1;min-width:0;overflow:hidden;}
     .course-info b{font-size:14px;font-weight:800;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .btn-go{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:none;border-radius:12px;padding:10px 20px;font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 3px 10px rgba(79,70,229,0.35);white-space:nowrap;letter-spacing:1px;transition:transform .1s,box-shadow .1s;}
+    .btn-go{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:none;border-radius:12px;padding:10px 20px;font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 3px 10px rgba(79,70,229,0.35);white-space:nowrap;letter-spacing:1px;transition:transform .1s,box-shadow .1s;touch-action:manipulation;}
     .btn-go:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(79,70,229,0.45);}
     .lock-tag{background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:999px;padding:6px 12px;font-size:11px;font-weight:800;white-space:nowrap;}
 
@@ -114,19 +114,19 @@
     .btn-bookmark.bookmarked{filter:drop-shadow(0 0 4px #f59e0b);}
 
     /* FOLDER MODAL */
-    .folder-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;}
+    .folder-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:5000;display:none;align-items:center;justify-content:center;padding:16px;}
     .folder-modal.open{display:flex;}
-    .folder-box{background:var(--card-bg);border-radius:24px;padding:24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+    .folder-box{background:var(--card-bg);border-radius:24px;padding:24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);-webkit-overflow-scrolling:touch;}
     .folder-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
     .folder-back{background:var(--input-bg);border:none;border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:#475569;}
     .folder-title{font-family:'Baloo 2',cursive;font-size:20px;font-weight:700;flex:1;color:var(--text);}
     .folder-close{background:none;border:none;font-size:22px;cursor:pointer;color:#9ca3af;}
-    .subject-btn{width:100%;padding:14px 18px;margin-bottom:10px;border:2px solid #e0e7ff;border-radius:14px;background:linear-gradient(135deg,#f5f3ff,#eef2ff);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#4f46e5;cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;}
+    .subject-btn{width:100%;padding:14px 18px;margin-bottom:10px;border:2px solid #e0e7ff;border-radius:14px;background:linear-gradient(135deg,#f5f3ff,#eef2ff);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#4f46e5;cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;touch-action:manipulation;}
     .subject-btn:hover{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border-color:transparent;transform:translateY(-1px);}
     [data-theme="dark"] .subject-btn{border-color:#3d3d6b;background:linear-gradient(135deg,#252540,#2d2d4e);color:#818cf8;}
-    .topic-btn{width:100%;padding:12px 16px;margin-bottom:8px;border:2px solid #d1fae5;border-radius:12px;background:linear-gradient(135deg,#f0fdf4,#d1fae5);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#065f46;cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;}
+    .topic-btn{width:100%;padding:12px 16px;margin-bottom:8px;border:2px solid #d1fae5;border-radius:12px;background:linear-gradient(135deg,#f0fdf4,#d1fae5);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#065f46;cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;touch-action:manipulation;}
     .topic-btn:hover{background:linear-gradient(135deg,#10b981,#059669);color:white;border-color:transparent;}
-    .test-folder-btn{width:100%;padding:12px 16px;margin-bottom:8px;border:2px solid #e0e7ff;border-radius:12px;background:var(--card-bg);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;justify-content:space-between;}
+    .test-folder-btn{width:100%;padding:12px 16px;margin-bottom:8px;border:2px solid #e0e7ff;border-radius:12px;background:var(--card-bg);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;justify-content:space-between;touch-action:manipulation;}
     .test-folder-btn:hover{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border-color:transparent;}
     .test-folder-btn .tf-go{background:#4f46e5;color:white;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:800;}
     .test-folder-btn:hover .tf-go{background:rgba(255,255,255,0.25);}
@@ -243,7 +243,7 @@
     .q-checkbox{width:18px;height:18px;accent-color:#4f46e5;cursor:pointer;flex-shrink:0;margin-top:2px;}
 
     /* EDIT QUESTION MODAL */
-    .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:center;justify-content:center;padding:16px;}
+    .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:5001;display:none;align-items:center;justify-content:center;padding:16px;}
     .modal-ov.open{display:flex;}
     .modal-box{background:var(--card-bg);border-radius:20px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
     .modal-box h3{font-family:'Baloo 2',cursive;font-size:20px;margin-bottom:16px;color:var(--text);}
@@ -357,11 +357,11 @@
     .btn-duplicate{background:#eef2ff;border:1.5px solid #c7d2fe;color:#4f46e5;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;}
 
     /* RENAME MODAL */
-    .rename-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:700;display:none;align-items:center;justify-content:center;padding:16px;}
+    .rename-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:5003;display:none;align-items:center;justify-content:center;padding:16px;}
     .rename-modal.open{display:flex;}
     .rename-box{background:var(--card-bg);border-radius:20px;padding:24px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
     .rename-box h3{font-family:'Baloo 2',cursive;font-size:18px;margin-bottom:14px;color:var(--text);}
-    .add-inside-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:700;display:none;align-items:center;justify-content:center;padding:16px;}
+    .add-inside-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:5003;display:none;align-items:center;justify-content:center;padding:16px;}
     .add-inside-modal.open{display:flex;}
     .add-inside-box{background:var(--card-bg);border-radius:20px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
     .add-inside-box h3{font-family:'Baloo 2',cursive;font-size:18px;margin-bottom:14px;color:var(--text);}
@@ -911,7 +911,7 @@
 </div>
 
 <!-- SET TIME MODAL -->
-<div id="setTimeModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:800;display:none;align-items:center;justify-content:center;padding:16px;">
+<div id="setTimeModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:5002;display:none;align-items:center;justify-content:center;padding:16px;">
   <div style="background:var(--card-bg);border-radius:20px;padding:24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
     <div style="font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;">⏱️ Set Test Time Limit</div>
     <div style="font-size:13px;color:#6b7280;margin-bottom:16px;" id="setTimeCourseLabel">—</div>
@@ -1450,13 +1450,14 @@ function renderFilteredCourses(){
   const grads=['#4f46e5,#7c3aed','#10b981,#059669','#f59e0b,#ef4444','#0ea5e9,#6366f1'];
   let html='';
   classes.forEach((c,i)=>{
+    const safeKey='cls_'+i;
     html+=`<div style="display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;overflow:hidden;background:var(--chip-bg);border:2px solid var(--card-border);border-radius:14px;padding:11px 12px;margin-bottom:8px;">
       <div style="width:38px;height:38px;min-width:38px;border-radius:11px;background:linear-gradient(135deg,${grads[i%4]});display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${emojis[i%emojis.length]}</div>
       <div style="flex:1;min-width:0;overflow:hidden;">
         <div style="font-size:14px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">${esc(toTitleCase(c.name))}</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px;">📚 ${c.count} test(s)</div>
       </div>
-      <button onclick="openFolder('${escQ(c.name)}')" style="flex-shrink:0;min-width:46px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:none;border-radius:10px;padding:9px 14px;font-family:'Baloo 2',cursive;font-weight:800;font-size:14px;cursor:pointer;">GO</button>
+      <button data-cls="${esc(c.name)}" class="go-btn" style="flex-shrink:0;min-width:46px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:none;border-radius:10px;padding:9px 14px;font-family:'Baloo 2',cursive;font-weight:800;font-size:14px;cursor:pointer;touch-action:manipulation;">GO</button>
     </div>`;
   });
   div.innerHTML=html;
@@ -1469,6 +1470,11 @@ function loadCourses(){
     renderFilteredCourses();refreshLbPick();
   }).catch(e=>{div.innerHTML=`<div class="empty">❌ ${esc(e.message)}</div>`;});
 }
+// Event delegation for GO buttons (works on mobile too)
+document.addEventListener('click',function(e){
+  const btn=e.target.closest('.go-btn');
+  if(btn){const cls=btn.getAttribute('data-cls');if(cls)openFolder(cls);}
+});
 
 // ── ADD QUESTION ──
 function clearQuestionForm(){["questionText","opt1","opt2","opt3","opt4","correct"].forEach(id=>{const el=g(id);if(el)el.value="";});const d=g('qDifficulty');if(d)d.value='medium';}
@@ -1595,8 +1601,13 @@ let folderState={cls:"",subject:"",chapter:"",history:[]};
 function openFolder(course){
   folderState={cls:course,subject:"",chapter:"",history:[]};
   g("folderModal").classList.add("open");
-  if(course&&allClassNames.includes(course)){folderState.history.push({level:"classes"});renderFolderSubjects(course);}
-  else renderFolderClasses();
+  g("folderContent").innerHTML='<div style="padding:20px;text-align:center;color:#9ca3af;">Loading...</div>';
+  if(course&&course.length>0){
+    folderState.history.push({level:"classes"});
+    renderFolderSubjects(course);
+  } else {
+    renderFolderClasses();
+  }
 }
 function closeFolder(){g("folderModal").classList.remove("open");}
 function folderGoBack(){
