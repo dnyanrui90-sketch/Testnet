@@ -1,9 +1,22 @@
 {
-  "name": "TestNest",
+  "name": "TestNest – Learn • Practice • Test",
   "short_name": "TestNest",
+  "description": "India's most fun test platform for students. Practice unlimited tests, compete on leaderboard, track progress with streaks and bookmarks.",
   "start_url": "/Testnet/",
   "display": "standalone",
   "background_color": "#4f46e5",
   "theme_color": "#4f46e5",
-  "icons": []
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
 }
