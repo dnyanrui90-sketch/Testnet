@@ -540,46 +540,39 @@
           <div id="bookmarksList"></div>
         </div>
 
-        <!-- TEST BOX -->
-        <!-- TEST BOX - FIXED & EXPANDED --> <div id="testBox" style="display:none;margin-top:16px;" class="card fade-in">   <div class="test-header">     <div>       <div class="card-title" id="testTitle">Test</div>       <div class="card-sub" id="qCountInfo"></div>     </div>     <div style="display:flex;align-items:center;gap:8px;">       <div id="modeTag" style="font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4f46e5;display:none;">🎮 Practice</div>       <div class="timer-box" id="timerDisplay">00:00</div>     </div>   </div>      <div id="questionArea"></div>    <div class="practice-feedback" id="practiceFeedback"></div>    <div class="qnav-panel" id="qnavPanel" style="display:none;">     <div class="qnav-grid" id="qnavGrid"></div>   </div>    <div class="test-btn-row" id="testBtnRow">     <div>       <button class="btn-skip" onclick="skipQuestion()">⏭ Skip</button>       <button class="btn-savenext" onclick="saveAndNext()">Save & Next ▶</button>     </div>     <div>       <button class="btn-submit" id="submitBtn" onclick="submitTest()">✅ Submit</button>       <button class="btn-close" onclick="closeTest()">✖</button>     </div>   </div> </div>
-          <div class="test-header">
-            <div>
-              <div class="card-title" id="testTitle">Test</div>
-              <div class="card-sub" id="qCountInfo"></div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <div id="modeTag" style="font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4f46e5;display:none;">🎮 Practice</div>
-              <div class="timer-box" id="timerDisplay">00:00</div>
-            </div>
-          </div>
-          <div id="questionArea"></div>
-          <!-- PRACTICE MODE FEEDBACK -->
-          <div class="practice-feedback" id="practiceFeedback"></div>
-          <div class="qnav-panel" id="qnavPanel" style="display:none;">
-            <div class="qnav-stats">
-              <div class="qnav-stat ns-attempted"><b id="navAttempted">0</b><span>Attempted</span></div>
-              <div class="qnav-stat ns-skipped"><b id="navSkipped">0</b><span>Skipped</span></div>
-              <div class="qnav-stat ns-notvisited"><b id="navNotVisited">0</b><span>Not Visited</span></div>
-            </div>
-            <div class="qnav-legend">
-              <div class="qnav-leg"><div class="qnav-dot attempted"></div>Attempted</div>
-              <div class="qnav-leg"><div class="qnav-dot skipped"></div>Skipped</div>
-              <div class="qnav-leg"><div class="qnav-dot notvisited"></div>Not Visited</div>
-              <div class="qnav-leg"><div class="qnav-dot bookmarked-q"></div>Bookmarked</div>
-            </div>
-            <div class="qnav-grid" id="qnavGrid"></div>
-          </div>
-          <div class="test-btn-row" id="testBtnRow">
-            <div>
-              <button class="btn-skip" onclick="skipQuestion()">⏭ Skip</button>
-              <button class="btn-savenext" onclick="saveAndNext()">Save & Next ▶</button>
-            </div>
-            <div>
-              <button class="btn-submit" id="submitBtn" onclick="submitTest()">✅ Submit</button>
-              <button class="btn-close" onclick="closeTest()">✖</button>
-            </div>
-          </div>
-        </div>
+        <!-- TEST BOX - FIXED & EXPANDED -->
+<div id="testBox" style="display:none;margin-top:16px;" class="card fade-in">
+  <div class="test-header">
+    <div>
+      <div class="card-title" id="testTitle">Test</div>
+      <div class="card-sub" id="qCountInfo"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div id="modeTag" style="font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4f46e5;display:none;">🎮 Practice</div>
+      <div class="timer-box" id="timerDisplay">00:00</div>
+    </div>
+  </div>
+  
+  <div id="questionArea"></div>
+
+  <div class="practice-feedback" id="practiceFeedback"></div>
+
+  <div class="qnav-panel" id="qnavPanel" style="display:none;">
+    <div class="qnav-grid" id="qnavGrid"></div>
+  </div>
+
+  <div class="test-btn-row" id="testBtnRow">
+    <div>
+      <button class="btn-skip" onclick="skipQuestion()">⏭ Skip</button>
+      <button class="btn-savenext" onclick="saveAndNext()">Save & Next ▶</button>
+    </div>
+    <div>
+      <button class="btn-submit" id="submitBtn" onclick="submitTest()">✅ Submit</button>
+      <button class="btn-close" onclick="closeTest()">✖</button>
+    </div>
+  </div>
+</div>
+       
 
         <!-- WRONG QUESTION RETRY BOX -->
         <div id="wrongRetryBox" style="display:none;margin-top:16px;" class="card fade-in">
