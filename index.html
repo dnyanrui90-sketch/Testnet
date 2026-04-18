@@ -1659,7 +1659,6 @@ async function renderFolderTests(cls,sub,ch){
     g("folderContent").innerHTML=html;
   }catch(e){g("folderContent").innerHTML='<div style="padding:16px;color:#dc2626;">'+esc(e.message)+'</div>';}
 }
-
 // ── EXPANDED & FIXED TEST ENGINE ──
 let currentCourse = "", currentCourseData = {}, currentQuestions = [];
 let currentQIndex = 0, qAnswers = [], qStatus = [], practiceMode = false;
